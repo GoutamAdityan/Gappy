@@ -1,0 +1,8 @@
+{
+  "name": "url_mapper",
+  "description": "Maps integer IDs from Auditor agent output back to real URLs from the full Serper search results array. This is the ONLY place URLs are resolved — the Auditor never sees URLs.",
+  "type": "API",
+  "visibility": "POD",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [] }
+}

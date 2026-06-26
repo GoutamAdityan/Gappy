@@ -1,0 +1,6 @@
+{
+  "name": "butterfly-ui",
+  "description": "Butterfly Effect cascade reasoning frontend — news headline to 4-layer consequence cascade",
+  "source": "index.html",
+  "visibility": "POD"
+}

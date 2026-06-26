@@ -1,0 +1,39 @@
+{
+  "name": "auditor",
+  "description": "Validates a cascade node claim against real search result snippets. Outputs confidence score and verified source IDs (integers only — never URLs).",
+  "instruction": { "$file": "instruction.md" },
+  "toolsets": ["POD"],
+  "visibility": "POD",
+  "agent_runtime": { "profile_id": "019f0306-1824-76be-a29c-d89658db4d16" },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "node_id": { "type": "string" },
+      "claim": { "type": "string" },
+      "search_snippets": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "index": { "type": "integer" },
+            "title": { "type": "string" },
+            "snippet": { "type": "string" }
+          }
+        }
+      }
+    },
+    "required": ["node_id", "claim", "search_snippets"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "node_id": { "type": "string" },
+      "validated": { "type": "boolean" },
+      "confidence_score": { "type": "integer" },
+      "evidence_extracted": { "type": "string" },
+      "verified_source_ids": { "type": "array", "items": { "type": "integer" } }
+    },
+    "required": ["node_id", "validated", "confidence_score", "evidence_extracted", "verified_source_ids"]
+  },
+  "permissions": { "grants": [] }
+}

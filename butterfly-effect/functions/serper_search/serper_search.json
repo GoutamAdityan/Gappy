@@ -1,0 +1,10 @@
+{
+  "name": "serper_search",
+  "description": "Calls Serper Google Search API for a query. Returns up to 5 results with integer indices. URLs stored in results but not passed to LLM — use url_mapper to resolve integer IDs to real URLs.",
+  "type": "API",
+  "visibility": "POD",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "folder", "resource_name": "/secrets", "permission_ids": ["folder.read"] }
+  ] }
+}

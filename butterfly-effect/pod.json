@@ -1,0 +1,5 @@
+{
+  "name": "butterfly-effect",
+  "description": "News cascade reasoning engine — traces breaking news through Macro → Micro → Professional → Personal consequence layers with real-time search validation",
+  "format_version": 1
+}

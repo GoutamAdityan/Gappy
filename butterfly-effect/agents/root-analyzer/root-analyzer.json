@@ -1,0 +1,35 @@
+{
+  "name": "root-analyzer",
+  "description": "Generates a single downstream consequence node for a given cascade layer. Takes cascade state and produces the next claim to validate.",
+  "instruction": { "$file": "instruction.md" },
+  "toolsets": ["POD"],
+  "visibility": "POD",
+  "agent_runtime": { "profile_id": "019f0306-1824-76be-a29c-d89658db4d16" },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "news_event": { "type": "string" },
+      "current_layer": { "type": "string", "enum": ["Macro", "Micro", "Professional", "Personal"] },
+      "previous_nodes": { "type": "array", "items": { "type": "object" } },
+      "user_profile": { "type": "object" },
+      "rejected_claims": { "type": "array", "items": { "type": "string" } }
+    },
+    "required": ["news_event", "current_layer"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "layer": { "type": "string" },
+      "claim": { "type": "string" },
+      "search_query": { "type": "string" },
+      "reasoning": { "type": "string" },
+      "skip_layer": { "type": "boolean" },
+      "skip_reason": { "type": "string" }
+    },
+    "required": ["layer", "claim", "search_query", "reasoning"]
+  },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "user_profiles",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] }
+  ] }
+}

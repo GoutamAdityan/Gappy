@@ -1,0 +1,82 @@
+{
+  "name": "onboarding",
+  "description": "Extracts user context from GitHub and a resume PDF, writes to user_profiles table. Run once per user before any cascade.",
+  "start": { "type": "MANUAL" },
+  "nodes": [
+    {
+      "id": "intake",
+      "type": "FORM",
+      "label": "User Onboarding",
+      "config": {
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "github_username": {
+              "type": "string",
+              "title": "GitHub Username",
+              "description": "Your GitHub username (e.g. torvalds)"
+            },
+            "resume_file_path": {
+              "type": "string",
+              "title": "Resume File Path",
+              "description": "Path to your uploaded resume PDF in the pod (e.g. /resumes/myresume.pdf). Upload via: lemma files upload ./resume.pdf /resumes/myresume.pdf"
+            }
+          },
+          "required": ["github_username", "resume_file_path"]
+        }
+      }
+    },
+    {
+      "id": "extract_github",
+      "type": "FUNCTION",
+      "label": "Extract GitHub Profile",
+      "config": {
+        "function_name": "github_extractor",
+        "input_mapping": {
+          "github_username": { "type": "expression", "value": "intake.github_username" }
+        }
+      }
+    },
+    {
+      "id": "extract_resume",
+      "type": "FUNCTION",
+      "label": "Parse Resume",
+      "config": {
+        "function_name": "resume_parser",
+        "input_mapping": {
+          "resume_file_path": { "type": "expression", "value": "intake.resume_file_path" }
+        }
+      }
+    },
+    {
+      "id": "write_profile",
+      "type": "FUNCTION",
+      "label": "Write User Profile",
+      "config": {
+        "function_name": "write_user_profile",
+        "input_mapping": {
+          "github_username": { "type": "expression", "value": "intake.github_username" },
+          "tech_stack": { "type": "expression", "value": "extract_github.tech_stack", "optional": true },
+          "top_repos": { "type": "expression", "value": "extract_github.top_repos", "optional": true },
+          "job_target": { "type": "expression", "value": "extract_resume.job_target", "optional": true },
+          "current_projects": { "type": "expression", "value": "extract_resume.current_projects", "optional": true },
+          "upcoming_events": { "type": "expression", "value": "extract_resume.upcoming_events", "optional": true },
+          "company_context": { "type": "expression", "value": "extract_resume.company_context", "optional": true },
+          "resume_file_path": { "type": "expression", "value": "intake.resume_file_path" }
+        }
+      }
+    },
+    {
+      "id": "end",
+      "type": "END",
+      "label": "Profile Created"
+    }
+  ],
+  "edges": [
+    { "id": "e1", "source": "intake", "target": "extract_github" },
+    { "id": "e2", "source": "extract_github", "target": "extract_resume" },
+    { "id": "e3", "source": "extract_resume", "target": "write_profile" },
+    { "id": "e4", "source": "write_profile", "target": "end" }
+  ],
+  "visibility": "POD"
+}

@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🦋 Butterfly Effect</title>
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --surface: #131318;
+      --card: #1a1a22;
+      --border: #2a2a38;
+      --text: #e8e6f0;
+      --muted: #7a7890;
+      --accent: #7c6aff;
+      --gold: #f0c040;
+      --green: #4ade80;
+      --red: #f87171;
+      --amber: #fb923c;
+      --cyan: #22d3ee;
+      --conf-5: #4ade80;
+      --conf-4: #86efac;
+      --conf-3: #fbbf24;
+      --conf-2: #f97316;
+      --conf-1: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100dvh;
+    }
+
+    /* LAYOUT */
+    .app { max-width: 880px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* HEADER */
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    .logo { display: flex; align-items: center; gap: .6rem; }
+    .logo-emoji { font-size: 1.6rem; }
+    .logo-text { font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; }
+    .logo-sub { font-size: .75rem; color: var(--muted); margin-top: 1px; letter-spacing: .05em; text-transform: uppercase; }
+    .header-pill { font-size: .75rem; color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: .3rem .75rem; }
+
+    /* INPUT PANEL */
+    .input-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .input-row { display: flex; gap: .75rem; align-items: flex-end; flex-wrap: wrap; }
+    .field { flex: 1; min-width: 220px; }
+    .field label { display: block; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
+    .field input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font: inherit; font-size: 15px; padding: .6rem .85rem; outline: none;
+      transition: border-color .15s;
+    }
+    .field input:focus { border-color: var(--accent); }
+    .field input::placeholder { color: var(--muted); }
+    .field-sm { flex: 0 0 180px; }
+    .btn-analyze {
+      background: var(--accent); color: #fff; border: none; border-radius: 10px;
+      font: inherit; font-size: 15px; font-weight: 600; padding: .65rem 1.4rem;
+      cursor: pointer; white-space: nowrap; transition: opacity .15s;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .btn-analyze:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-analyze:hover:not(:disabled) { opacity: .85; }
+
+    /* STATUS BAR */
+    #status-bar {
+      font-size: .82rem; color: var(--muted); padding: .5rem 0;
+      min-height: 1.5rem; display: none;
+    }
+    #status-bar.visible { display: block; }
+    .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: .4rem; vertical-align: middle; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
+
+    /* AGENT TASK CONTAINER */
+    #agent-container { margin-bottom: 1rem; }
+    lemma-agent-task { --lemma-bg: var(--card); --lemma-accent: var(--accent); display: block; border-radius: 12px; overflow: hidden; }
+
+    /* CASCADE LAYERS */
+    #cascade { display: none; }
+    #cascade.visible { display: block; }
+    .cascade-header { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.25rem; }
+
+    .layer { position: relative; }
+    .connector {
+      width: 2px; height: 32px; margin-left: 22px;
+      background: var(--border);
+      transition: background .4s, height .4s;
+    }
+    .connector.conf-5 { background: var(--conf-5); }
+    .connector.conf-4 { background: var(--conf-4); width: 2px; }
+    .connector.conf-3 { background: var(--conf-3); border: none; background-image: repeating-linear-gradient(to bottom, var(--conf-3) 0, var(--conf-3) 6px, transparent 6px, transparent 10px); }
+    .connector.conf-2 { background-image: repeating-linear-gradient(to bottom, var(--conf-2) 0, var(--conf-2) 4px, transparent 4px, transparent 8px); }
+    .connector.compressed { background-image: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 3px, transparent 3px, transparent 7px); }
+
+    .layer-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      transition: border-color .3s;
+    }
+    .layer-card.evaluating { border-color: var(--muted); animation: card-pulse 1.8s ease-in-out infinite; }
+    .layer-card.auditing { border-color: var(--amber); box-shadow: 0 0 18px rgba(251,146,60,.12); }
+    .layer-card.confirmed { border-color: var(--green); }
+    .layer-card.rejected { border-color: var(--red); opacity: .7; }
+    .layer-card.compressed { border-style: dashed; border-color: var(--border); opacity: .6; }
+    .layer-card.pending { opacity: .45; }
+    @keyframes card-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(124,106,255,.3); } 50% { box-shadow: 0 0 16px 2px rgba(124,106,255,.2); } }
+
+    .layer-top { display: flex; align-items: center; gap: .65rem; margin-bottom: .5rem; }
+    .layer-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex: none;
+      background: var(--border);
+      transition: background .3s;
+    }
+    .layer-dot.pending { background: var(--border); }
+    .layer-dot.evaluating { background: var(--accent); animation: blink 1s infinite; }
+    .layer-dot.auditing { background: var(--amber); animation: blink .8s infinite; }
+    .layer-dot.confirmed { background: var(--green); }
+    .layer-dot.rejected { background: var(--red); }
+    .layer-dot.compressed { background: var(--muted); }
+
+    .layer-name { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+    .layer-status-badge {
+      margin-left: auto; font-size: .7rem; padding: .15rem .55rem;
+      border-radius: 999px; font-weight: 600;
+      border: 1px solid var(--border); color: var(--muted);
+    }
+    .layer-status-badge.evaluating { color: var(--accent); border-color: var(--accent); }
+    .layer-status-badge.auditing { color: var(--amber); border-color: var(--amber); }
+    .layer-status-badge.confirmed { color: var(--green); border-color: var(--green); }
+    .layer-status-badge.rejected { color: var(--red); border-color: var(--red); }
+    .layer-status-badge.compressed { color: var(--muted); border-color: var(--border); }
+
+    .layer-claim { font-size: .95rem; line-height: 1.45; margin-bottom: .6rem; }
+    .layer-claim.pending-text { color: var(--muted); font-style: italic; font-size: .85rem; }
+
+    .rejected-claims { margin-bottom: .75rem; }
+    .rejected-claim {
+      font-size: .82rem; color: var(--muted);
+      text-decoration: line-through;
+      background: rgba(248,113,113,.06);
+      border-left: 2px solid var(--red);
+      padding: .3rem .6rem;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: .35rem;
+    }
+
+    .conf-bar-wrap { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; }
+    .conf-label { font-size: .72rem; color: var(--muted); flex: none; width: 80px; }
+    .conf-bar {
+      flex: 1; height: 5px; border-radius: 999px;
+      background: var(--border); overflow: hidden;
+    }
+    .conf-fill { height: 100%; border-radius: 999px; transition: width .6s ease; }
+    .conf-score { font-size: .72rem; color: var(--muted); flex: none; font-variant-numeric: tabular-nums; }
+
+    .evidence { font-size: .8rem; color: var(--muted); font-style: italic; margin-bottom: .55rem; line-height: 1.4; }
+    .reasoning { font-size: .78rem; color: var(--muted); margin-bottom: .6rem; }
+
+    .sources { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .source-chip {
+      font-size: .72rem; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: .2rem .55rem; color: var(--cyan);
+      text-decoration: none; transition: border-color .15s;
+    }
+    .source-chip:hover { border-color: var(--cyan); }
+
+    .compressed-label { font-size: .82rem; color: var(--muted); font-style: italic; }
+
+    /* COMPLETE BANNER */
+    #complete-banner {
+      display: none;
+      background: rgba(74,222,128,.06);
+      border: 1px solid rgba(74,222,128,.25);
+      border-radius: 12px;
+      padding: .85rem 1.25rem;
+      text-align: center;
+      color: var(--green);
+      font-size: .9rem;
+      margin-top: 1.5rem;
+    }
+    #complete-banner.visible { display: block; }
+
+    /* AUDIO MOCK BUTTON */
+    .audio-cta {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .btn-audio {
+      background: linear-gradient(135deg, #2a2240 0%, #1a1a2e 100%);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 12px;
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 600;
+      padding: .75rem 1.6rem;
+      cursor: pointer;
+      opacity: .7;
+      transition: opacity .15s;
+    }
+    .btn-audio:hover { opacity: .9; }
+    .audio-label { font-size: .72rem; color: var(--muted); margin-top: .4rem; }
+
+    /* NEW EVENT button */
+    .btn-new {
+      background: none; border: 1px solid var(--border); color: var(--muted);
+      border-radius: 8px; font: inherit; font-size: .8rem;
+      padding: .4rem .85rem; cursor: pointer; display: none;
+    }
+    .btn-new.visible { display: inline-flex; align-items: center; gap: .4rem; }
+    .btn-new:hover { border-color: var(--text); color: var(--text); }
+
+    /* Error */
+    .error-msg { color: var(--red); font-size: .85rem; padding: .5rem 0; display: none; }
+    .error-msg.visible { display: block; }
+
+    /* Scan line animation for auditing */
+    @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(200%); } }
+
+    /* SIGN-IN screen */
+    .signin-wrap { display: grid; place-items: center; min-height: 80dvh; }
+    .signin-box { text-align: center; max-width: 320px; }
+    .signin-box h1 { font-size: 2rem; margin: .5rem 0; }
+    .signin-box p { color: var(--muted); margin: .5rem 0 1.5rem; }
+    .btn-signin {
+      background: var(--accent); color: #fff; border: none; border-radius: 10px;
+      font: inherit; font-size: 15px; font-weight: 600; padding: .7rem 1.8rem; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div id="root"><div class="signin-wrap"><div class="signin-box"><p style="color:var(--muted);font-size:2rem">🦋</p><p>Loading…</p></div></div></div>
+
+<script>
+(function () {
+  var cfg = window.__LEMMA_CONFIG__ || {};
+  var base = (cfg.apiUrl || window.location.origin).replace(/\/$/, "");
+  function load(path, cb) {
+    var s = document.createElement("script");
+    s.src = base + path;
+    s.onload = cb || null;
+    s.onerror = function () { showError("SDK load failed from " + s.src); };
+    document.head.appendChild(s);
+  }
+  load("/public/sdk/lemma-client.js", function () {
+    load("/public/sdk/lemma-ui.js", boot);
+  });
+})();
+
+var client;
+var currentConvId = null;
+
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+function $(id) { return document.getElementById(id); }
+
+function showError(msg) {
+  document.getElementById("root").innerHTML =
+    '<div class="signin-wrap"><div class="signin-box"><p style="color:var(--red)">⚠ ' + esc(msg) + '</p></div></div>';
+}
+
+async function boot() {
+  try {
+    client = new window.LemmaClient.LemmaClient();
+    var auth = await client.initialize();
+    if (auth.status !== "authenticated") {
+      renderSignIn();
+      return;
+    }
+    renderApp(auth.user);
+  } catch(e) {
+    showError((e && e.message) || "Initialization failed.");
+  }
+}
+
+function renderSignIn() {
+  document.getElementById("root").innerHTML =
+    '<div class="signin-wrap"><div class="signin-box">' +
+    '<p style="font-size:2.5rem">🦋</p>' +
+    '<h1>Butterfly Effect</h1>' +
+    '<p>One piece of news. Every subsequent consequence.</p>' +
+    '<button class="btn-signin" onclick="client.auth.redirectToAuth()">Sign in to continue</button>' +
+    '</div></div>';
+}
+
+function domainOf(url) {
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch(e) { return url; }
+}
+
+function confColor(score) {
+  var map = {5:"var(--conf-5)",4:"var(--conf-4)",3:"var(--conf-3)",2:"var(--conf-2)",1:"var(--conf-1)"};
+  return map[score] || "var(--muted)";
+}
+
+function confWidth(score) { return Math.round((score / 5) * 100) + "%"; }
+
+function renderApp(user) {
+  var LAYERS = ["Macro", "Micro", "Professional", "Personal"];
+
+  document.getElementById("root").innerHTML =
+    '<div class="app">' +
+      '<div class="header">' +
+        '<div class="logo">' +
+          '<span class="logo-emoji">🦋</span>' +
+          '<div><div class="logo-text">Butterfly Effect</div><div class="logo-sub">News cascade engine</div></div>' +
+        '</div>' +
+        '<div style="display:flex;gap:.6rem;align-items:center">' +
+          '<button class="btn-new" id="btn-new">↺ New Event</button>' +
+          '<span class="header-pill" id="user-pill"></span>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="input-panel">' +
+        '<div class="input-row">' +
+          '<div class="field">' +
+            '<label>Breaking News Headline</label>' +
+            '<input id="news-input" type="text" placeholder="e.g. OpenAI acquires Windsurf for $3B" />' +
+          '</div>' +
+          '<div class="field field-sm">' +
+            '<label>GitHub Username</label>' +
+            '<input id="gh-input" type="text" placeholder="your-username" />' +
+          '</div>' +
+          '<button class="btn-analyze" id="btn-analyze">Analyze →</button>' +
+        '</div>' +
+        '<div id="status-bar"></div>' +
+        '<div class="error-msg" id="err-msg"></div>' +
+      '</div>' +
+
+      '<div id="agent-container"></div>' +
+
+      '<div id="cascade">' +
+        '<div class="cascade-header">Consequence Cascade</div>' +
+        LAYERS.map(function(l, i) {
+          return (i > 0 ? '<div class="connector" id="conn-' + LAYERS[i-1].toLowerCase() + '"></div>' : '') +
+            '<div class="layer" id="layer-' + l.toLowerCase() + '">' +
+              '<div class="layer-card pending" id="card-' + l.toLowerCase() + '">' +
+                '<div class="layer-top">' +
+                  '<span class="layer-dot pending" id="dot-' + l.toLowerCase() + '"></span>' +
+                  '<span class="layer-name">' + l + '</span>' +
+                  '<span class="layer-status-badge" id="badge-' + l.toLowerCase() + '">pending</span>' +
+                '</div>' +
+                '<div class="layer-claim pending-text" id="claim-' + l.toLowerCase() + '">Waiting…</div>' +
+              '</div>' +
+            '</div>';
+        }).join('') +
+        '<div id="complete-banner" class=""></div>' +
+        '<div class="audio-cta">' +
+          '<button class="btn-audio" onclick="alert(\'Audio generation coming in v2!\')">🎧 Generate Morning Audio Commute Brief (v2)</button>' +
+          '<div class="audio-label">Mock — real audio pipeline ships in v2</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  // Set user pill
+  var email = (user && user.email) || "";
+  $("user-pill").textContent = email.split("@")[0] || "signed in";
+
+  $("btn-analyze").addEventListener("click", runCascade);
+  $("news-input").addEventListener("keydown", function(e){ if(e.key==="Enter") runCascade(); });
+  $("btn-new").addEventListener("click", resetUI);
+}
+
+function resetUI() {
+  $("cascade").classList.remove("visible");
+  $("complete-banner").classList.remove("visible");
+  $("btn-new").classList.remove("visible");
+  $("agent-container").innerHTML = "";
+  $("status-bar").classList.remove("visible");
+  $("err-msg").classList.remove("visible");
+  $("btn-analyze").disabled = false;
+  $("news-input").value = "";
+}
+
+function setStatus(msg) {
+  var sb = $("status-bar");
+  sb.innerHTML = '<span class="status-dot"></span>' + esc(msg);
+  sb.classList.add("visible");
+}
+
+function clearStatus() {
+  $("status-bar").classList.remove("visible");
+}
+
+function updateLayerState(layerName, state, data) {
+  var key = layerName.toLowerCase();
+  var card = $("card-" + key);
+  var dot = $("dot-" + key);
+  var badge = $("badge-" + key);
+  var claimEl = $("claim-" + key);
+  if (!card) return;
+
+  // Remove all state classes
+  ["pending","evaluating","auditing","confirmed","rejected","compressed"].forEach(function(s) {
+    card.classList.remove(s);
+    dot.classList.remove(s);
+    badge.classList.remove(s);
+  });
+
+  card.classList.add(state);
+  dot.classList.add(state);
+  badge.classList.add(state);
+
+  var stateLabels = {
+    pending: "pending", evaluating: "generating…", auditing: "auditing…",
+    confirmed: "confirmed", rejected: "rejected", compressed: "compressed"
+  };
+  badge.textContent = stateLabels[state] || state;
+
+  if (data && data.claim) {
+    if (state === "rejected") {
+      claimEl.innerHTML = '<span style="text-decoration:line-through;color:var(--red);">' + esc(data.claim) + '</span>';
+    } else {
+      claimEl.className = "layer-claim";
+      claimEl.textContent = data.claim;
+    }
+  } else if (state === "evaluating") {
+    claimEl.innerHTML = '<span class="pending-text">Generating consequence…</span>';
+  } else if (state === "auditing") {
+    claimEl.innerHTML = '<span style="color:var(--amber)">Searching and validating…</span>';
+  } else if (state === "compressed") {
+    claimEl.innerHTML = '<span class="compressed-label">⏭ No direct causal path — layer compressed</span>';
+  }
+}
+
+function renderConfirmedLayer(layerName, data) {
+  var key = layerName.toLowerCase();
+  var card = $("card-" + key);
+  if (!card) return;
+
+  var score = data.confidence_score || 0;
+  var confColor = {"5":"var(--conf-5)","4":"var(--conf-4)","3":"var(--conf-3)","2":"var(--conf-2)","1":"var(--conf-1)"}[String(score)] || "var(--muted)";
+  var confWidth = Math.round((score / 5) * 100) + "%";
+
+  var rejectedHtml = "";
+  if (data.rejected_claims && data.rejected_claims.length > 0) {
+    rejectedHtml = '<div class="rejected-claims">' +
+      data.rejected_claims.map(function(rc) {
+        return '<div class="rejected-claim">✕ ' + esc(rc) + '</div>';
+      }).join("") +
+    '</div>';
+  }
+
+  var sourcesHtml = "";
+  if (data.verified_sources && data.verified_sources.length > 0) {
+    sourcesHtml = '<div class="sources">' +
+      data.verified_sources.map(function(s) {
+        var domain = s.url ? domainOf(s.url) : (s.title || "source");
+        return '<a class="source-chip" href="' + esc(s.url || "#") + '" target="_blank" rel="noopener">' + esc(domain) + '</a>';
+      }).join("") +
+    '</div>';
+  }
+
+  var innerHtml =
+    '<div class="layer-top">' +
+      '<span class="layer-dot confirmed" id="dot-' + key + '"></span>' +
+      '<span class="layer-name">' + esc(layerName) + '</span>' +
+      '<span class="layer-status-badge confirmed" id="badge-' + key + '">confirmed</span>' +
+    '</div>' +
+    rejectedHtml +
+    '<div class="layer-claim">' + esc(data.claim) + '</div>' +
+    '<div class="conf-bar-wrap">' +
+      '<span class="conf-label">Confidence</span>' +
+      '<div class="conf-bar"><div class="conf-fill" style="width:' + confWidth + ';background:' + confColor + '"></div></div>' +
+      '<span class="conf-score">' + score + '/5</span>' +
+    '</div>' +
+    (data.evidence_extracted ? '<div class="evidence">"' + esc(data.evidence_extracted) + '"</div>' : '') +
+    sourcesHtml;
+
+  card.className = "layer-card confirmed";
+  card.innerHTML = innerHtml;
+
+  // Update connector line weight
+  var LAYERS = ["Macro","Micro","Professional","Personal"];
+  var idx = LAYERS.indexOf(layerName);
+  if (idx > 0) {
+    var connId = "conn-" + LAYERS[idx-1].toLowerCase();
+    var conn = $(connId);
+    if (conn) {
+      conn.className = "connector conf-" + score;
+    }
+  }
+}
+
+function renderLayerFromOutput(layerName, layerData) {
+  if (!layerData) return;
+
+  if (layerData.status === "compressed") {
+    updateLayerState(layerName, "compressed", {});
+    return;
+  }
+
+  // Show rejected claims first (as dim cards above the confirmed one)
+  // Then render confirmed state
+  renderConfirmedLayer(layerName, layerData);
+}
+
+async function runCascade() {
+  var newsEvent = ($("news-input").value || "").trim();
+  var ghUsername = ($("gh-input").value || "").trim();
+
+  if (!newsEvent) {
+    $("err-msg").textContent = "Enter a news headline first.";
+    $("err-msg").classList.add("visible");
+    return;
+  }
+  if (!ghUsername) {
+    $("err-msg").textContent = "Enter your GitHub username to personalize the cascade.";
+    $("err-msg").classList.add("visible");
+    return;
+  }
+  $("err-msg").classList.remove("visible");
+  $("btn-analyze").disabled = true;
+  $("cascade").classList.add("visible");
+  setStatus("Starting cascade analysis…");
+
+  // Show all layers as evaluating-pending
+  ["Macro","Micro","Professional","Personal"].forEach(function(l, i) {
+    updateLayerState(l, i === 0 ? "evaluating" : "pending", {});
+  });
+
+  // Build the agent task element
+  var container = $("agent-container");
+  container.innerHTML = "";
+  var task = document.createElement("lemma-agent-task");
+  task.setAttribute("agent", "cascade-orchestrator");
+  task.setAttribute("input", JSON.stringify({
+    news_event: newsEvent,
+    github_username: ghUsername
+  }));
+
+  // Listen for status updates from intermediate messages
+  task.addEventListener("lemma-message", function(e) {
+    var msg = e.detail;
+    if (!msg) return;
+    var text = msg.text || msg.content || "";
+    if (!text) return;
+
+    // Parse emoji status prefixes
+    if (text.indexOf("🔍") >= 0) {
+      var layerMatch = text.match(/🔍.*?(Macro|Micro|Professional|Personal)/);
+      if (layerMatch) { setStatus("Generating " + layerMatch[1] + " consequence…"); updateLayerState(layerMatch[1], "evaluating", {}); }
+    } else if (text.indexOf("🔎") >= 0) {
+      var layerMatch = text.match(/🔎.*?(Macro|Micro|Professional|Personal)/);
+      if (layerMatch) { setStatus("Auditing " + layerMatch[1] + " claim…"); updateLayerState(layerMatch[1], "auditing", {}); }
+    } else if (text.indexOf("❌") >= 0) {
+      setStatus("Claim rejected — retrying…");
+    } else if (text.indexOf("✅") >= 0) {
+      setStatus("Claim confirmed — moving to next layer…");
+    } else if (text.indexOf("⏭️") >= 0 || text.indexOf("⏭") >= 0) {
+      setStatus("Layer compressed — no causal path found");
+    } else if (text.indexOf("🦋 CASCADE COMPLETE") >= 0) {
+      setStatus("Cascade complete!");
+    }
+  });
+
+  // Listen for final output
+  task.addEventListener("lemma-output", function(e) {
+    var output = e.detail;
+    if (!output) return;
+
+    clearStatus();
+    $("btn-new").classList.add("visible");
+
+    // Parse layers from output
+    var layers = output.layers || {};
+    ["Macro","Micro","Professional","Personal"].forEach(function(l) {
+      var ld = layers[l];
+      if (ld) renderLayerFromOutput(l, ld);
+      else updateLayerState(l, "pending", {});
+    });
+
+    // Show complete banner
+    var banner = $("complete-banner");
+    banner.textContent = "🦋 Cascade complete — " + Object.values(layers).filter(function(l){return l && l.status==="confirmed";}).length + " of 4 layers confirmed";
+    banner.classList.add("visible");
+
+    $("btn-analyze").disabled = false;
+  });
+
+  task.addEventListener("lemma-error", function(e) {
+    clearStatus();
+    $("err-msg").textContent = "Cascade failed: " + esc((e.detail && e.detail.message) || "unknown error");
+    $("err-msg").classList.add("visible");
+    $("btn-analyze").disabled = false;
+    ["Macro","Micro","Professional","Personal"].forEach(function(l) {
+      updateLayerState(l, "pending", {});
+    });
+  });
+
+  container.appendChild(task);
+  // Trigger run
+  task.run();
+}
+</script>
+</body>
+</html>

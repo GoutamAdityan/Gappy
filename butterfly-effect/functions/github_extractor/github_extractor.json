@@ -1,0 +1,8 @@
+{
+  "name": "github_extractor",
+  "description": "Calls GitHub REST API for a username, returns tech_stack (comma-separated languages) and top_repos (JSON array string).",
+  "type": "API",
+  "visibility": "POD",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [] }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "resume_parser",
+  "description": "Reads a PDF resume from Lemma Files, calls NIM LLM to extract job_target, current_projects, upcoming_events, company_context.",
+  "type": "API",
+  "visibility": "POD",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "folder", "resource_name": "/secrets", "permission_ids": ["folder.read"] },
+    { "resource_type": "folder", "resource_name": "/resumes", "permission_ids": ["folder.read"] }
+  ] }
+}
