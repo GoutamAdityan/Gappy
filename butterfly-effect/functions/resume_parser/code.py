@@ -32,9 +32,15 @@ def _safe_parse_json(content: str, fallback: dict) -> dict:
 async def resume_parser(ctx: FunctionContext, data: ResumeParserInput) -> ResumeParserOutput:
     pod = Pod.from_env()
 
-    # Read resume text from Lemma Files (auto-converted markdown for PDFs)
+    # Read resume text from Lemma Files (auto-converted markdown for PDFs, or raw for text/markdown)
     try:
-        resume_bytes = pod.files.download_markdown(data.resume_file_path)
+        if data.resume_file_path.lower().endswith('.pdf'):
+            try:
+                resume_bytes = pod.files.download_markdown(data.resume_file_path)
+            except Exception:
+                resume_bytes = pod.files.download(data.resume_file_path)
+        else:
+            resume_bytes = pod.files.download(data.resume_file_path)
         resume_text = resume_bytes.decode("utf-8") if isinstance(resume_bytes, bytes) else str(resume_bytes)
     except Exception as e:
         return ResumeParserOutput(error=f"Failed to read resume file: {e}")

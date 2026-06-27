@@ -1,40 +1,102 @@
 {
   "name": "cascade-orchestrator",
   "description": "Main orchestrator for the Butterfly Effect cascade. Receives a news headline + github_username, manages the full 4-layer loop (Macro→Micro→Professional→Personal) with validation and retry logic, emits structured progress updates, returns completed cascade JSON.",
-  "instruction": { "$file": "instruction.md" },
-  "toolsets": ["POD", "USER_INTERACTION"],
+  "instruction": {
+    "$file": "instruction.md"
+  },
+  "toolsets": [
+    "POD",
+    "USER_INTERACTION"
+  ],
   "visibility": "POD",
   "input_schema": {
     "type": "object",
     "properties": {
-      "news_event": { "type": "string", "description": "The breaking news headline to analyze" },
-      "github_username": { "type": "string", "description": "GitHub username to load user profile from" }
+      "news_event": {
+        "type": "string",
+        "description": "The breaking news headline to analyze"
+      },
+      "github_username": {
+        "type": "string",
+        "description": "GitHub username to load user profile from"
+      }
     },
-    "required": ["news_event", "github_username"]
+    "required": [
+      "news_event",
+      "github_username"
+    ]
   },
   "output_schema": {
     "type": "object",
     "properties": {
-      "session_id": { "type": "string" },
-      "news_event": { "type": "string" },
-      "layers": { "type": "object" },
-      "completed": { "type": "boolean" }
+      "session_id": {
+        "type": "string"
+      },
+      "news_event": {
+        "type": "string"
+      },
+      "layers": {
+        "type": "object"
+      },
+      "completed": {
+        "type": "boolean"
+      }
     },
-    "required": ["news_event", "layers", "completed"]
+    "required": [
+      "news_event",
+      "layers",
+      "completed"
+    ]
   },
-  "permissions": { "grants": [
-    { "resource_type": "datastore_table", "resource_name": "user_profiles",
-      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
-    { "resource_type": "function", "resource_name": "serper_search",
-      "permission_ids": ["function.read", "function.execute"] },
-    { "resource_type": "function", "resource_name": "url_mapper",
-      "permission_ids": ["function.read", "function.execute"] },
-    { "resource_type": "folder", "resource_name": "/secrets",
-      "permission_ids": ["folder.read"] },
-    { "resource_type": "agent", "resource_name": "root-analyzer",
-      "permission_ids": ["agent.execute"] },
-    { "resource_type": "agent", "resource_name": "auditor",
-      "permission_ids": ["agent.execute"] }
-  ] }
-  // Note: serper_search reads /secrets — mirrored above. url_mapper needs no extra grants.
+  "permissions": {
+    "grants": [
+      {
+        "resource_type": "datastore_table",
+        "resource_name": "user_profiles",
+        "permission_ids": [
+          "datastore.table.read",
+          "datastore.record.read"
+        ]
+      },
+      {
+        "resource_type": "function",
+        "resource_name": "serper_search",
+        "permission_ids": [
+          "function.read",
+          "function.execute"
+        ]
+      },
+      {
+        "resource_type": "function",
+        "resource_name": "url_mapper",
+        "permission_ids": [
+          "function.read",
+          "function.execute"
+        ]
+      },
+      {
+        "resource_type": "folder",
+        "resource_name": "/secrets",
+        "permission_ids": [
+          "folder.read"
+        ]
+      },
+      {
+        "resource_type": "agent",
+        "resource_name": "root-analyzer",
+        "permission_ids": [
+          "agent.read",
+          "agent.execute"
+        ]
+      },
+      {
+        "resource_type": "agent",
+        "resource_name": "auditor",
+        "permission_ids": [
+          "agent.read",
+          "agent.execute"
+        ]
+      }
+    ]
+  }
 }
