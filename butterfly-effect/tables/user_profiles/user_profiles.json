@@ -1,16 +1,18 @@
 {
   "name": "user_profiles",
-  "enable_rls": false,
-  "visibility": "POD",
+  "enable_rls": true,
+  "visibility": "PUBLIC",
   "columns": [
-    { "name": "github_username", "type": "TEXT", "required": true, "description": "GitHub username — used as the lookup key" },
+     { "name": "github_username", "type": "TEXT", "required": true, "description": "GitHub username — used as the lookup key" },
+    { "name": "profile_status", "type": "TEXT", "required": true, "default_value": "pending", "description": "pending, processing, ready, or failed" },
     { "name": "tech_stack", "type": "TEXT", "required": false, "description": "Comma-separated primary languages/frameworks from GitHub repos" },
     { "name": "top_repos", "type": "TEXT", "required": false, "description": "JSON array string of top 5 repo names and descriptions" },
     { "name": "job_target", "type": "TEXT", "required": false, "description": "Target role extracted from resume" },
     { "name": "current_projects", "type": "TEXT", "required": false, "description": "Active project names and one-line descriptions" },
     { "name": "upcoming_events", "type": "TEXT", "required": false, "description": "Time-sensitive events from resume, e.g. interviews, deadlines" },
     { "name": "company_context", "type": "TEXT", "required": false, "description": "Current employer or target companies mentioned in resume" },
-    { "name": "resume_file_path", "type": "TEXT", "required": false, "description": "Lemma Files path for the uploaded PDF resume" }
+    { "name": "resume_file_path", "type": "TEXT", "required": false, "description": "Lemma Files path for the uploaded PDF resume" },
+     { "name": "last_synced_at", "type": "DATETIME", "required": false, "description": "Last successful onboarding sync timestamp" }
   ],
   "config": {}
 }

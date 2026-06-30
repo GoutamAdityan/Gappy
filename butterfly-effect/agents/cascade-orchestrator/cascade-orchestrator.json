@@ -1,6 +1,6 @@
 {
   "name": "cascade-orchestrator",
-  "description": "Main orchestrator for the Butterfly Effect cascade. Receives a news headline + github_username, manages the full 4-layer loop (Macro→Micro→Professional→Personal) with validation and retry logic, emits structured progress updates, returns completed cascade JSON.",
+  "description": "Main orchestrator for the Butterfly Effect cascade. Receives a news headline + github_username, manages the full 4-layer loop (Macro > Micro > Professional > Personal) with validation and retry logic, emits structured progress updates, returns completed cascade JSON.",
   "instruction": {
     "$file": "instruction.md"
   },
@@ -8,6 +8,9 @@
     "POD",
     "USER_INTERACTION"
   ],
+  "agent_runtime": {
+    "profile_id": "system:lemma"
+  },
   "visibility": "POD",
   "input_schema": {
     "type": "object",
@@ -36,7 +39,14 @@
         "type": "string"
       },
       "layers": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "Macro": { "type": "object" },
+          "Micro": { "type": "object" },
+          "Professional": { "type": "object" },
+          "Personal": { "type": "object" }
+        },
+        "required": ["Macro", "Micro", "Professional", "Personal"]
       },
       "completed": {
         "type": "boolean"

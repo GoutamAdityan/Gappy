@@ -1,0 +1,11 @@
+{
+  "name": "generate_audio_brief",
+  "description": "Mock-only audio action. Live TTS is disabled in this build.",
+  "type": "API",
+  "visibility": "POD",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "folder", "resource_name": "/secrets", "permission_ids": ["folder.read"] }
+  ]
+  }
+}

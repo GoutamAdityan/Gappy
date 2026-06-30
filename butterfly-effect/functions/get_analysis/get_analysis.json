@@ -1,0 +1,11 @@
+{
+  "name": "get_analysis",
+  "description": "Poll for cascade analysis job status.",
+  "type": "API",
+  "visibility": "PUBLIC",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "analysis_jobs", "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "analysis_results", "permission_ids": ["datastore.table.read", "datastore.record.read"] }
+  ] }
+}

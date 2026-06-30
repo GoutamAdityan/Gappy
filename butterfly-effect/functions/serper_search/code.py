@@ -46,8 +46,8 @@ async def serper_search(ctx: FunctionContext, data: SerperSearchInput) -> Serper
                 },
                 json={"q": data.query, "num": 5}
             )
-        resp.raise_for_status()
-        data_json = resp.json()
+            resp.raise_for_status()
+            data_json = resp.json()
     except Exception as e:
         return SerperSearchOutput(results=[], error=f"Serper API error: {e}")
 

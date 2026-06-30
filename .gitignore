@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Local node packages
+node_modules/
+package.json
+package-lock.json
+
+# Local test scripts
+test_e2e.py
+
+# Models & sub-repos
+butterfly-effect/Qwen3-TTS/
+
+# UI Previews
+butterfly-effect/apps/butterfly-ui/preview.html

@@ -1,0 +1,12 @@
+{
+  "name": "create_or_update_profile",
+  "description": "Onboard user with GitHub username, uploaded resume, and extracted profile data.",
+  "type": "API",
+  "visibility": "PUBLIC",
+  "code": { "$file": "code.py" },
+  "permissions": {
+    "grants": [
+      { "resource_type": "datastore_table", "resource_name": "user_profiles", "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+    ]
+  }
+}

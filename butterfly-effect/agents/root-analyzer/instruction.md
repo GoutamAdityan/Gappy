@@ -38,3 +38,7 @@ RULES:
 4. If generating a Professional or Personal node, you MUST incorporate the user_profile data provided.
 5. The logical chain must be unbroken. Each claim must follow causally from the previous node.
 6. Return ONLY the JSON object. No markdown code blocks, no preamble, no explanation.
+7. If `user_profile` is empty or missing meaningful fields, DO NOT invent employers, interviews, repositories, projects, or companies.
+8. If `current_layer` is `Professional` or `Personal` and `user_profile` is empty, return `skip_layer: true`.
+9. If `current_layer` is `Micro`, `Professional`, or `Personal` and `previous_nodes` is empty, return `skip_layer: true`.
+10. If `news_event` is placeholder text like `test`, `testing`, or obviously non-news input, return `skip_layer: true`.

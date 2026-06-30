@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,7 +25,13 @@
       --conf-2: #f97316;
       --conf-1: #ef4444;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: var(--bg);
       color: var(--text);
@@ -35,73 +42,240 @@
     }
 
     /* LAYOUT */
-    .app { max-width: 880px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .app {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* SCREENS */
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
 
     /* HEADER */
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
-    .logo { display: flex; align-items: center; gap: .6rem; }
-    .logo-emoji { font-size: 1.6rem; }
-    .logo-text { font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; }
-    .logo-sub { font-size: .75rem; color: var(--muted); margin-top: 1px; letter-spacing: .05em; text-transform: uppercase; }
-    .header-pill { font-size: .75rem; color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: .3rem .75rem; }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
 
-    /* INPUT PANEL */
-    .input-panel {
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .logo-emoji {
+      font-size: 1.6rem;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+
+    .logo-sub {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: 1px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: .6rem;
+      align-items: center;
+    }
+
+    .header-pill {
+      font-size: .75rem;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .3rem .75rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .btn-logout {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: .75rem;
+    }
+
+    /* FORMS & PANELS */
+    .panel {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.5rem;
       margin-bottom: 2rem;
     }
-    .input-row { display: flex; gap: .75rem; align-items: flex-end; flex-wrap: wrap; }
-    .field { flex: 1; min-width: 220px; }
-    .field label { display: block; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
-    .field input {
-      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
-      color: var(--text); font: inherit; font-size: 15px; padding: .6rem .85rem; outline: none;
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: .75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .4rem;
+    }
+
+    .field input[type="text"],
+    .field input[type="file"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      padding: .6rem .85rem;
+      outline: none;
       transition: border-color .15s;
     }
-    .field input:focus { border-color: var(--accent); }
-    .field input::placeholder { color: var(--muted); }
-    .field-sm { flex: 0 0 180px; }
-    .btn-analyze {
-      background: var(--accent); color: #fff; border: none; border-radius: 10px;
-      font: inherit; font-size: 15px; font-weight: 600; padding: .65rem 1.4rem;
-      cursor: pointer; white-space: nowrap; transition: opacity .15s;
-      display: flex; align-items: center; gap: .5rem;
-    }
-    .btn-analyze:disabled { opacity: .45; cursor: not-allowed; }
-    .btn-analyze:hover:not(:disabled) { opacity: .85; }
 
-    /* STATUS BAR */
-    #status-bar {
-      font-size: .82rem; color: var(--muted); padding: .5rem 0;
-      min-height: 1.5rem; display: none;
+    .field input:focus {
+      border-color: var(--accent);
     }
-    #status-bar.visible { display: block; }
-    .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: .4rem; vertical-align: middle; animation: blink 1s infinite; }
-    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
 
-    /* AGENT TASK CONTAINER */
-    #agent-container { margin-bottom: 1rem; }
-    lemma-agent-task { --lemma-bg: var(--card); --lemma-accent: var(--accent); display: block; border-radius: 12px; overflow: hidden; }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: .65rem 1.4rem;
+      cursor: pointer;
+      transition: opacity .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .btn-primary:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: .4rem .8rem;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--muted);
+    }
+
+    /* DASHBOARD PROFILE */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .profile-item {
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .profile-item-label {
+      font-size: .7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .3rem;
+    }
+
+    .profile-item-value {
+      font-size: .9rem;
+      font-weight: 500;
+    }
 
     /* CASCADE LAYERS */
-    #cascade { display: none; }
-    #cascade.visible { display: block; }
-    .cascade-header { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.25rem; }
+    #cascade {
+      margin-top: 2rem;
+    }
 
-    .layer { position: relative; }
+    .cascade-header {
+      font-size: .75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 1.25rem;
+    }
+
+    .layer {
+      position: relative;
+    }
+
     .connector {
-      width: 2px; height: 32px; margin-left: 22px;
+      width: 2px;
+      height: 32px;
+      margin-left: 22px;
       background: var(--border);
       transition: background .4s, height .4s;
     }
-    .connector.conf-5 { background: var(--conf-5); }
-    .connector.conf-4 { background: var(--conf-4); width: 2px; }
-    .connector.conf-3 { background: var(--conf-3); border: none; background-image: repeating-linear-gradient(to bottom, var(--conf-3) 0, var(--conf-3) 6px, transparent 6px, transparent 10px); }
-    .connector.conf-2 { background-image: repeating-linear-gradient(to bottom, var(--conf-2) 0, var(--conf-2) 4px, transparent 4px, transparent 8px); }
-    .connector.compressed { background-image: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 3px, transparent 3px, transparent 7px); }
+
+    .connector.conf-5 {
+      background: var(--conf-5);
+    }
+
+    .connector.conf-4 {
+      background: var(--conf-4);
+      width: 2px;
+    }
+
+    .connector.conf-3 {
+      background: var(--conf-3);
+      border: none;
+      background-image: repeating-linear-gradient(to bottom, var(--conf-3) 0, var(--conf-3) 6px, transparent 6px, transparent 10px);
+    }
+
+    .connector.conf-2 {
+      background-image: repeating-linear-gradient(to bottom, var(--conf-2) 0, var(--conf-2) 4px, transparent 4px, transparent 8px);
+    }
+
+    .connector.compressed {
+      background-image: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 3px, transparent 3px, transparent 7px);
+    }
 
     .layer-card {
       background: var(--card);
@@ -110,80 +284,240 @@
       padding: 1.1rem 1.25rem;
       transition: border-color .3s;
     }
-    .layer-card.evaluating { border-color: var(--muted); animation: card-pulse 1.8s ease-in-out infinite; }
-    .layer-card.auditing { border-color: var(--amber); box-shadow: 0 0 18px rgba(251,146,60,.12); }
-    .layer-card.confirmed { border-color: var(--green); }
-    .layer-card.rejected { border-color: var(--red); opacity: .7; }
-    .layer-card.compressed { border-style: dashed; border-color: var(--border); opacity: .6; }
-    .layer-card.pending { opacity: .45; }
-    @keyframes card-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(124,106,255,.3); } 50% { box-shadow: 0 0 16px 2px rgba(124,106,255,.2); } }
 
-    .layer-top { display: flex; align-items: center; gap: .65rem; margin-bottom: .5rem; }
+    .layer-card.evaluating {
+      border-color: var(--muted);
+      animation: card-pulse 1.8s ease-in-out infinite;
+    }
+
+    .layer-card.auditing {
+      border-color: var(--amber);
+      box-shadow: 0 0 18px rgba(251, 146, 60, .12);
+    }
+
+    .layer-card.confirmed {
+      border-color: var(--green);
+    }
+
+    .layer-card.rejected {
+      border-color: var(--red);
+      opacity: .7;
+    }
+
+    .layer-card.compressed {
+      border-style: dashed;
+      border-color: var(--border);
+      opacity: .6;
+    }
+
+    .layer-card.pending {
+      opacity: .45;
+    }
+
+    @keyframes card-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(124, 106, 255, .3);
+      }
+
+      50% {
+        box-shadow: 0 0 16px 2px rgba(124, 106, 255, .2);
+      }
+    }
+
+    .layer-top {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      margin-bottom: .5rem;
+    }
+
     .layer-dot {
-      width: 10px; height: 10px; border-radius: 50%; flex: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: none;
       background: var(--border);
       transition: background .3s;
     }
-    .layer-dot.pending { background: var(--border); }
-    .layer-dot.evaluating { background: var(--accent); animation: blink 1s infinite; }
-    .layer-dot.auditing { background: var(--amber); animation: blink .8s infinite; }
-    .layer-dot.confirmed { background: var(--green); }
-    .layer-dot.rejected { background: var(--red); }
-    .layer-dot.compressed { background: var(--muted); }
 
-    .layer-name { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
-    .layer-status-badge {
-      margin-left: auto; font-size: .7rem; padding: .15rem .55rem;
-      border-radius: 999px; font-weight: 600;
-      border: 1px solid var(--border); color: var(--muted);
+    .layer-dot.pending {
+      background: var(--border);
     }
-    .layer-status-badge.evaluating { color: var(--accent); border-color: var(--accent); }
-    .layer-status-badge.auditing { color: var(--amber); border-color: var(--amber); }
-    .layer-status-badge.confirmed { color: var(--green); border-color: var(--green); }
-    .layer-status-badge.rejected { color: var(--red); border-color: var(--red); }
-    .layer-status-badge.compressed { color: var(--muted); border-color: var(--border); }
 
-    .layer-claim { font-size: .95rem; line-height: 1.45; margin-bottom: .6rem; }
-    .layer-claim.pending-text { color: var(--muted); font-style: italic; font-size: .85rem; }
+    .layer-dot.evaluating {
+      background: var(--accent);
+      animation: blink 1s infinite;
+    }
 
-    .rejected-claims { margin-bottom: .75rem; }
+    .layer-dot.auditing {
+      background: var(--amber);
+      animation: blink .8s infinite;
+    }
+
+    .layer-dot.confirmed {
+      background: var(--green);
+    }
+
+    .layer-dot.rejected {
+      background: var(--red);
+    }
+
+    .layer-dot.compressed {
+      background: var(--muted);
+    }
+
+    .layer-name {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+    }
+
+    .layer-status-badge {
+      margin-left: auto;
+      font-size: .7rem;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .layer-status-badge.evaluating {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .layer-status-badge.auditing {
+      color: var(--amber);
+      border-color: var(--amber);
+    }
+
+    .layer-status-badge.confirmed {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
+    .layer-status-badge.rejected {
+      color: var(--red);
+      border-color: var(--red);
+    }
+
+    .layer-status-badge.compressed {
+      color: var(--muted);
+      border-color: var(--border);
+    }
+
+    .layer-claim {
+      font-size: .95rem;
+      line-height: 1.45;
+      margin-bottom: .6rem;
+    }
+
+    .layer-claim.pending-text {
+      color: var(--muted);
+      font-style: italic;
+      font-size: .85rem;
+    }
+
+    .rejected-claims {
+      margin-bottom: .75rem;
+    }
+
     .rejected-claim {
-      font-size: .82rem; color: var(--muted);
+      font-size: .82rem;
+      color: var(--muted);
       text-decoration: line-through;
-      background: rgba(248,113,113,.06);
+      background: rgba(248, 113, 113, .06);
       border-left: 2px solid var(--red);
       padding: .3rem .6rem;
       border-radius: 0 6px 6px 0;
       margin-bottom: .35rem;
     }
 
-    .conf-bar-wrap { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; }
-    .conf-label { font-size: .72rem; color: var(--muted); flex: none; width: 80px; }
+    .conf-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: .5rem;
+    }
+
+    .conf-label {
+      font-size: .72rem;
+      color: var(--muted);
+      flex: none;
+      width: 80px;
+    }
+
     .conf-bar {
-      flex: 1; height: 5px; border-radius: 999px;
-      background: var(--border); overflow: hidden;
+      flex: 1;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--border);
+      overflow: hidden;
     }
-    .conf-fill { height: 100%; border-radius: 999px; transition: width .6s ease; }
-    .conf-score { font-size: .72rem; color: var(--muted); flex: none; font-variant-numeric: tabular-nums; }
 
-    .evidence { font-size: .8rem; color: var(--muted); font-style: italic; margin-bottom: .55rem; line-height: 1.4; }
-    .reasoning { font-size: .78rem; color: var(--muted); margin-bottom: .6rem; }
+    .conf-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width .6s ease;
+    }
 
-    .sources { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .conf-score {
+      font-size: .72rem;
+      color: var(--muted);
+      flex: none;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .evidence {
+      font-size: .8rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: .55rem;
+      line-height: 1.4;
+    }
+
+    .reasoning {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: .6rem;
+    }
+
+    .sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+
     .source-chip {
-      font-size: .72rem; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 6px; padding: .2rem .55rem; color: var(--cyan);
-      text-decoration: none; transition: border-color .15s;
+      font-size: .72rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .2rem .55rem;
+      color: var(--cyan);
+      text-decoration: none;
+      transition: border-color .15s;
     }
-    .source-chip:hover { border-color: var(--cyan); }
 
-    .compressed-label { font-size: .82rem; color: var(--muted); font-style: italic; }
+    .source-chip:hover {
+      border-color: var(--cyan);
+    }
 
-    /* COMPLETE BANNER */
+    .compressed-label {
+      font-size: .82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
     #complete-banner {
       display: none;
-      background: rgba(74,222,128,.06);
-      border: 1px solid rgba(74,222,128,.25);
+      background: rgba(74, 222, 128, .06);
+      border: 1px solid rgba(74, 222, 128, .25);
       border-radius: 12px;
       padding: .85rem 1.25rem;
       text-align: center;
@@ -191,418 +525,658 @@
       font-size: .9rem;
       margin-top: 1.5rem;
     }
-    #complete-banner.visible { display: block; }
 
-    /* AUDIO MOCK BUTTON */
-    .audio-cta {
-      margin-top: 2rem;
+    #complete-banner.visible {
+      display: block;
+    }
+
+    #failed-banner {
+      display: none;
+      background: rgba(248, 113, 113, .08);
+      border: 1px solid rgba(248, 113, 113, .28);
+      border-radius: 12px;
+      padding: .85rem 1.25rem;
+      text-align: center;
+      color: var(--red);
+      font-size: .9rem;
+      margin-top: 1.5rem;
+    }
+
+    #failed-banner.visible {
+      display: block;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: .4rem;
+      vertical-align: middle;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .2;
+      }
+    }
+
+    .error-msg {
+      color: var(--red);
+      font-size: .85rem;
+      padding: .5rem 0;
+      display: none;
+      margin-top: .5rem;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .analysis-meta {
+      display: grid;
+      gap: .55rem;
+      margin-top: .75rem;
+      padding-top: .75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .analysis-meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--cyan));
+      border-radius: 999px;
+      transition: width .35s ease;
+    }
+
+    .analysis-pill {
+      font-size: .72rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .18rem .55rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    /* SIGN-IN */
+    .centered-box {
+      display: grid;
+      place-items: center;
+      min-height: 70dvh;
       text-align: center;
     }
-    .btn-audio {
-      background: linear-gradient(135deg, #2a2240 0%, #1a1a2e 100%);
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      border-radius: 12px;
-      font: inherit;
-      font-size: .88rem;
-      font-weight: 600;
-      padding: .75rem 1.6rem;
-      cursor: pointer;
-      opacity: .7;
-      transition: opacity .15s;
+
+    .centered-box h1 {
+      font-size: 2rem;
+      margin: .5rem 0;
     }
-    .btn-audio:hover { opacity: .9; }
-    .audio-label { font-size: .72rem; color: var(--muted); margin-top: .4rem; }
 
-    /* NEW EVENT button */
-    .btn-new {
-      background: none; border: 1px solid var(--border); color: var(--muted);
-      border-radius: 8px; font: inherit; font-size: .8rem;
-      padding: .4rem .85rem; cursor: pointer; display: none;
-    }
-    .btn-new.visible { display: inline-flex; align-items: center; gap: .4rem; }
-    .btn-new:hover { border-color: var(--text); color: var(--text); }
-
-    /* Error */
-    .error-msg { color: var(--red); font-size: .85rem; padding: .5rem 0; display: none; }
-    .error-msg.visible { display: block; }
-
-    /* Scan line animation for auditing */
-    @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(200%); } }
-
-    /* SIGN-IN screen */
-    .signin-wrap { display: grid; place-items: center; min-height: 80dvh; }
-    .signin-box { text-align: center; max-width: 320px; }
-    .signin-box h1 { font-size: 2rem; margin: .5rem 0; }
-    .signin-box p { color: var(--muted); margin: .5rem 0 1.5rem; }
-    .btn-signin {
-      background: var(--accent); color: #fff; border: none; border-radius: 10px;
-      font: inherit; font-size: 15px; font-weight: 600; padding: .7rem 1.8rem; cursor: pointer;
+    .centered-box p {
+      color: var(--muted);
+      margin: .5rem 0 1.5rem;
     }
   </style>
 </head>
+
 <body>
-<div id="root"><div class="signin-wrap"><div class="signin-box"><p style="color:var(--muted);font-size:2rem">🦋</p><p>Loading…</p></div></div></div>
 
-<script>
-(function () {
-  var cfg = window.__LEMMA_CONFIG__ || {};
-  var base = (cfg.apiUrl || window.location.origin).replace(/\/$/, "");
-  function load(path, cb) {
-    var s = document.createElement("script");
-    s.src = base + path;
-    s.onload = cb || null;
-    s.onerror = function () { showError("SDK load failed from " + s.src); };
-    document.head.appendChild(s);
-  }
-  load("/public/sdk/lemma-client.js", function () {
-    load("/public/sdk/lemma-ui.js", boot);
-  });
-})();
+  <div class="app">
+    <div class="header">
+      <div class="logo">
+        <span class="logo-emoji">🦋</span>
+        <div>
+          <div class="logo-text">Butterfly Effect</div>
+          <div class="logo-sub">News cascade engine</div>
+        </div>
+      </div>
+      <div class="header-actions" id="auth-actions" style="display:none">
+        <span class="header-pill" id="user-pill"></span>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </div>
 
-var client;
-var currentConvId = null;
+    <!-- LOADING -->
+    <div id="screen-loading" class="screen active">
+      <div class="centered-box">
+        <p style="font-size:2.5rem">🦋</p>
+        <p>Initializing...</p>
+      </div>
+    </div>
 
-function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
-function $(id) { return document.getElementById(id); }
+    <!-- SIGN IN -->
+    <div id="screen-signin" class="screen">
+      <div class="centered-box">
+        <p style="font-size:2.5rem">🦋</p>
+        <h1>Butterfly Effect</h1>
+        <p>One piece of news. Every subsequent consequence.</p>
+        <button class="btn-primary" onclick="client.auth.redirectToAuth()">Sign in with GitHub</button>
+      </div>
+    </div>
 
-function showError(msg) {
-  document.getElementById("root").innerHTML =
-    '<div class="signin-wrap"><div class="signin-box"><p style="color:var(--red)">⚠ ' + esc(msg) + '</p></div></div>';
-}
+    <!-- ONBOARDING -->
+    <div id="screen-onboarding" class="screen">
+      <div class="panel" style="max-width:500px; margin:0 auto;">
+        <h2 class="panel-title">Complete Your Profile</h2>
+        <p style="color:var(--muted); font-size: .85rem; margin-bottom: 1.5rem;">We need your GitHub username and resume
+          to personalize the downstream cascade for you.</p>
+        <div class="field">
+          <label>GitHub Username</label>
+          <input type="text" id="ob-github" placeholder="e.g. torvalds" />
+        </div>
+        <div class="field">
+          <label>Upload Resume (PDF/Doc)</label>
+          <input type="file" id="ob-resume" accept=".pdf,.doc,.docx" />
+        </div>
+        <button class="btn-primary" id="btn-onboard" style="width: 100%; justify-content: center; margin-top: 1rem;"
+          onclick="submitOnboarding()">Create Profile</button>
+        <div id="ob-error" class="error-msg"></div>
+      </div>
+    </div>
 
-async function boot() {
-  try {
-    client = new window.LemmaClient.LemmaClient();
-    var auth = await client.initialize();
-    if (auth.status !== "authenticated") {
-      renderSignIn();
-      return;
+    <!-- DASHBOARD -->
+    <div id="screen-dashboard" class="screen">
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+          <h2 class="panel-title" style="margin:0;">Your Profile</h2>
+          <button class="btn-secondary" onclick="showScreen('screen-onboarding')">Update</button>
+        </div>
+        <div class="profile-grid">
+          <div class="profile-item">
+            <div class="profile-item-label">Job Target</div>
+            <div class="profile-item-value" id="dash-job">Loading...</div>
+          </div>
+          <div class="profile-item">
+            <div class="profile-item-label">Tech Stack</div>
+            <div class="profile-item-value" id="dash-stack">Loading...</div>
+          </div>
+          <div class="profile-item">
+            <div class="profile-item-label">Active Projects</div>
+            <div class="profile-item-value" id="dash-projects">Loading...</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+          <div>
+            <h2 class="panel-title" style="margin:0;">Composer</h2>
+            <p style="color:var(--muted); font-size:.85rem; margin-top:.25rem;">Open the analysis composer to run or
+              resume a cascade.</p>
+          </div>
+          <button class="btn-primary" onclick="showScreen('screen-composer')">Open Composer →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPOSER -->
+    <div id="screen-composer" class="screen">
+      <div class="panel">
+        <div
+          style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; gap:1rem; flex-wrap:wrap;">
+          <div>
+            <h2 class="panel-title" style="margin:0;">Run Cascade</h2>
+            <p style="color:var(--muted); font-size:.85rem; margin-top:.25rem;">Enter a news headline and watch the
+              async job progress layer by layer.</p>
+          </div>
+          <button class="btn-secondary" onclick="showScreen('screen-dashboard')">Back to Dashboard</button>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:flex-end;">
+          <div class="field" style="flex:1; margin:0;">
+            <label>Breaking News Headline</label>
+            <input type="text" id="news-input" placeholder="e.g. OpenAI acquires Windsurf for $3B" />
+          </div>
+          <button class="btn-primary" id="btn-analyze" onclick="startAnalysis()">Analyze →</button>
+        </div>
+        <div id="analysis-error" class="error-msg"></div>
+        <div class="analysis-meta" id="analysis-meta" style="display:none;">
+          <div class="analysis-meta-row">
+            <span id="analysis-status-text">Idle</span>
+            <span class="analysis-pill" id="analysis-layer-pill">Waiting</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="analysis-progress-fill"></div>
+          </div>
+        </div>
+        <div id="cascade" style="display:none; margin-top:2rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem;">
+            <div class="cascade-header" style="margin:0;">Consequence Cascade</div>
+            <div id="status-bar" style="font-size: .82rem; color: var(--muted);"><span class="status-dot"></span><span
+                id="status-text">Processing...</span></div>
+          </div>
+
+          <!-- Generated via JS -->
+          <div id="cascade-layers"></div>
+
+          <div id="complete-banner"></div>
+          <div id="failed-banner"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var client;
+    var currentUser;
+    var currentJobId = localStorage.getItem('active_job_id');
+    var pollTimer;
+
+    const LAYERS = ["Macro", "Micro", "Professional", "Personal"];
+
+    (function () {
+      if (!window.__LEMMA_CONFIG__ && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+        window.__LEMMA_CONFIG__ = {
+          apiUrl: window.location.origin,
+          podId: "019f07a7-625d-7055-b9e0-14c8e95bddeb",
+          timeoutMs: 120000
+        };
+        var params = new URLSearchParams(window.location.search);
+        var t = params.get("token");
+        if (t) {
+          localStorage.setItem("lemma_token", t);
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+      var cfg = window.__LEMMA_CONFIG__ || {};
+      var base = (cfg.apiUrl || window.location.origin).replace(/\/$/, "");
+
+      function load(path, cb) {
+        var s = document.createElement("script");
+        s.src = base + path;
+        s.onload = cb || null;
+        s.onerror = function () { alert("SDK load failed"); };
+        document.head.appendChild(s);
+      }
+      load("/public/sdk/lemma-client.js", function () {
+        load("/public/sdk/lemma-ui.js", boot);
+      });
+    })();
+
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      $(id).classList.add('active');
     }
-    renderApp(auth.user);
-  } catch(e) {
-    showError((e && e.message) || "Initialization failed.");
-  }
-}
 
-function renderSignIn() {
-  document.getElementById("root").innerHTML =
-    '<div class="signin-wrap"><div class="signin-box">' +
-    '<p style="font-size:2.5rem">🦋</p>' +
-    '<h1>Butterfly Effect</h1>' +
-    '<p>One piece of news. Every subsequent consequence.</p>' +
-    '<button class="btn-signin" onclick="client.auth.redirectToAuth()">Sign in to continue</button>' +
-    '</div></div>';
-}
-
-function domainOf(url) {
-  try { return new URL(url).hostname.replace(/^www\./, ""); } catch(e) { return url; }
-}
-
-function confColor(score) {
-  var map = {5:"var(--conf-5)",4:"var(--conf-4)",3:"var(--conf-3)",2:"var(--conf-2)",1:"var(--conf-1)"};
-  return map[score] || "var(--muted)";
-}
-
-function confWidth(score) { return Math.round((score / 5) * 100) + "%"; }
-
-function renderApp(user) {
-  var LAYERS = ["Macro", "Micro", "Professional", "Personal"];
-
-  document.getElementById("root").innerHTML =
-    '<div class="app">' +
-      '<div class="header">' +
-        '<div class="logo">' +
-          '<span class="logo-emoji">🦋</span>' +
-          '<div><div class="logo-text">Butterfly Effect</div><div class="logo-sub">News cascade engine</div></div>' +
-        '</div>' +
-        '<div style="display:flex;gap:.6rem;align-items:center">' +
-          '<button class="btn-new" id="btn-new">↺ New Event</button>' +
-          '<span class="header-pill" id="user-pill"></span>' +
-        '</div>' +
-      '</div>' +
-
-      '<div class="input-panel">' +
-        '<div class="input-row">' +
-          '<div class="field">' +
-            '<label>Breaking News Headline</label>' +
-            '<input id="news-input" type="text" placeholder="e.g. OpenAI acquires Windsurf for $3B" />' +
-          '</div>' +
-          '<div class="field field-sm">' +
-            '<label>GitHub Username</label>' +
-            '<input id="gh-input" type="text" placeholder="your-username" />' +
-          '</div>' +
-          '<button class="btn-analyze" id="btn-analyze">Analyze →</button>' +
-        '</div>' +
-        '<div id="status-bar"></div>' +
-        '<div class="error-msg" id="err-msg"></div>' +
-      '</div>' +
-
-      '<div id="agent-container"></div>' +
-
-      '<div id="cascade">' +
-        '<div class="cascade-header">Consequence Cascade</div>' +
-        LAYERS.map(function(l, i) {
-          return (i > 0 ? '<div class="connector" id="conn-' + LAYERS[i-1].toLowerCase() + '"></div>' : '') +
-            '<div class="layer" id="layer-' + l.toLowerCase() + '">' +
-              '<div class="layer-card pending" id="card-' + l.toLowerCase() + '">' +
-                '<div class="layer-top">' +
-                  '<span class="layer-dot pending" id="dot-' + l.toLowerCase() + '"></span>' +
-                  '<span class="layer-name">' + l + '</span>' +
-                  '<span class="layer-status-badge" id="badge-' + l.toLowerCase() + '">pending</span>' +
-                '</div>' +
-                '<div class="layer-claim pending-text" id="claim-' + l.toLowerCase() + '">Waiting…</div>' +
-              '</div>' +
-            '</div>';
-        }).join('') +
-        '<div id="complete-banner" class=""></div>' +
-        '<div class="audio-cta">' +
-          '<button class="btn-audio" onclick="alert(\'Audio generation coming in v2!\')">🎧 Generate Morning Audio Commute Brief (v2)</button>' +
-          '<div class="audio-label">Mock — real audio pipeline ships in v2</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-
-  // Set user pill
-  var email = (user && user.email) || "";
-  $("user-pill").textContent = email.split("@")[0] || "signed in";
-
-  $("btn-analyze").addEventListener("click", runCascade);
-  $("news-input").addEventListener("keydown", function(e){ if(e.key==="Enter") runCascade(); });
-  $("btn-new").addEventListener("click", resetUI);
-}
-
-function resetUI() {
-  $("cascade").classList.remove("visible");
-  $("complete-banner").classList.remove("visible");
-  $("btn-new").classList.remove("visible");
-  $("agent-container").innerHTML = "";
-  $("status-bar").classList.remove("visible");
-  $("err-msg").classList.remove("visible");
-  $("btn-analyze").disabled = false;
-  $("news-input").value = "";
-}
-
-function setStatus(msg) {
-  var sb = $("status-bar");
-  sb.innerHTML = '<span class="status-dot"></span>' + esc(msg);
-  sb.classList.add("visible");
-}
-
-function clearStatus() {
-  $("status-bar").classList.remove("visible");
-}
-
-function updateLayerState(layerName, state, data) {
-  var key = layerName.toLowerCase();
-  var card = $("card-" + key);
-  var dot = $("dot-" + key);
-  var badge = $("badge-" + key);
-  var claimEl = $("claim-" + key);
-  if (!card) return;
-
-  // Remove all state classes
-  ["pending","evaluating","auditing","confirmed","rejected","compressed"].forEach(function(s) {
-    card.classList.remove(s);
-    dot.classList.remove(s);
-    badge.classList.remove(s);
-  });
-
-  card.classList.add(state);
-  dot.classList.add(state);
-  badge.classList.add(state);
-
-  var stateLabels = {
-    pending: "pending", evaluating: "generating…", auditing: "auditing…",
-    confirmed: "confirmed", rejected: "rejected", compressed: "compressed"
-  };
-  badge.textContent = stateLabels[state] || state;
-
-  if (data && data.claim) {
-    if (state === "rejected") {
-      claimEl.innerHTML = '<span style="text-decoration:line-through;color:var(--red);">' + esc(data.claim) + '</span>';
-    } else {
-      claimEl.className = "layer-claim";
-      claimEl.textContent = data.claim;
+    function getCurrentOwnerId() {
+      if (!currentUser) return "";
+      return currentUser.id || currentUser.user_id || currentUser.userId || currentUser.uid || currentUser.email || "";
     }
-  } else if (state === "evaluating") {
-    claimEl.innerHTML = '<span class="pending-text">Generating consequence…</span>';
-  } else if (state === "auditing") {
-    claimEl.innerHTML = '<span style="color:var(--amber)">Searching and validating…</span>';
-  } else if (state === "compressed") {
-    claimEl.innerHTML = '<span class="compressed-label">⏭ No direct causal path — layer compressed</span>';
-  }
-}
 
-function renderConfirmedLayer(layerName, data) {
-  var key = layerName.toLowerCase();
-  var card = $("card-" + key);
-  if (!card) return;
-
-  var score = data.confidence_score || 0;
-  var confColor = {"5":"var(--conf-5)","4":"var(--conf-4)","3":"var(--conf-3)","2":"var(--conf-2)","1":"var(--conf-1)"}[String(score)] || "var(--muted)";
-  var confWidth = Math.round((score / 5) * 100) + "%";
-
-  var rejectedHtml = "";
-  if (data.rejected_claims && data.rejected_claims.length > 0) {
-    rejectedHtml = '<div class="rejected-claims">' +
-      data.rejected_claims.map(function(rc) {
-        return '<div class="rejected-claim">✕ ' + esc(rc) + '</div>';
-      }).join("") +
-    '</div>';
-  }
-
-  var sourcesHtml = "";
-  if (data.verified_sources && data.verified_sources.length > 0) {
-    sourcesHtml = '<div class="sources">' +
-      data.verified_sources.map(function(s) {
-        var domain = s.url ? domainOf(s.url) : (s.title || "source");
-        return '<a class="source-chip" href="' + esc(s.url || "#") + '" target="_blank" rel="noopener">' + esc(domain) + '</a>';
-      }).join("") +
-    '</div>';
-  }
-
-  var innerHtml =
-    '<div class="layer-top">' +
-      '<span class="layer-dot confirmed" id="dot-' + key + '"></span>' +
-      '<span class="layer-name">' + esc(layerName) + '</span>' +
-      '<span class="layer-status-badge confirmed" id="badge-' + key + '">confirmed</span>' +
-    '</div>' +
-    rejectedHtml +
-    '<div class="layer-claim">' + esc(data.claim) + '</div>' +
-    '<div class="conf-bar-wrap">' +
-      '<span class="conf-label">Confidence</span>' +
-      '<div class="conf-bar"><div class="conf-fill" style="width:' + confWidth + ';background:' + confColor + '"></div></div>' +
-      '<span class="conf-score">' + score + '/5</span>' +
-    '</div>' +
-    (data.evidence_extracted ? '<div class="evidence">"' + esc(data.evidence_extracted) + '"</div>' : '') +
-    sourcesHtml;
-
-  card.className = "layer-card confirmed";
-  card.innerHTML = innerHtml;
-
-  // Update connector line weight
-  var LAYERS = ["Macro","Micro","Professional","Personal"];
-  var idx = LAYERS.indexOf(layerName);
-  if (idx > 0) {
-    var connId = "conn-" + LAYERS[idx-1].toLowerCase();
-    var conn = $(connId);
-    if (conn) {
-      conn.className = "connector conf-" + score;
+    async function runLemmaFunction(functionName, payload) {
+      var res = await client.functions.run(functionName, { input: payload });
+      var output = res.output || res.output_data || res;
+      if (output && output.error) {
+        throw new Error(output.error);
+      }
+      return output || {};
     }
-  }
-}
 
-function renderLayerFromOutput(layerName, layerData) {
-  if (!layerData) return;
+    async function boot() {
+      try {
+        var cfg = window.__LEMMA_CONFIG__ || {};
+        client = new window.LemmaClient.LemmaClient(cfg);
+        var auth = await client.initialize();
 
-  if (layerData.status === "compressed") {
-    updateLayerState(layerName, "compressed", {});
-    return;
-  }
+        if (auth.status !== "authenticated") {
+          showScreen('screen-signin');
+          return;
+        }
+        currentUser = auth.user || null;
+        if (!currentUser) {
+          showScreen('screen-signin');
+          return;
+        }
 
-  // Show rejected claims first (as dim cards above the confirmed one)
-  // Then render confirmed state
-  renderConfirmedLayer(layerName, layerData);
-}
+        $("auth-actions").style.display = "flex";
+        var ownerLabel = getCurrentOwnerId() || currentUser.email || "signed-in";
+        $("user-pill").textContent = String(ownerLabel).split("@")[0];
 
-async function runCascade() {
-  var newsEvent = ($("news-input").value || "").trim();
-  var ghUsername = ($("gh-input").value || "").trim();
-
-  if (!newsEvent) {
-    $("err-msg").textContent = "Enter a news headline first.";
-    $("err-msg").classList.add("visible");
-    return;
-  }
-  if (!ghUsername) {
-    $("err-msg").textContent = "Enter your GitHub username to personalize the cascade.";
-    $("err-msg").classList.add("visible");
-    return;
-  }
-  $("err-msg").classList.remove("visible");
-  $("btn-analyze").disabled = true;
-  $("cascade").classList.add("visible");
-  setStatus("Starting cascade analysis…");
-
-  // Show all layers as evaluating-pending
-  ["Macro","Micro","Professional","Personal"].forEach(function(l, i) {
-    updateLayerState(l, i === 0 ? "evaluating" : "pending", {});
-  });
-
-  // Build the agent task element
-  var container = $("agent-container");
-  container.innerHTML = "";
-  var task = document.createElement("lemma-agent-task");
-  task.setAttribute("agent", "cascade-orchestrator");
-  task.setAttribute("input", JSON.stringify({
-    news_event: newsEvent,
-    github_username: ghUsername
-  }));
-
-  // Listen for status updates from intermediate messages
-  task.addEventListener("lemma-message", function(e) {
-    var msg = e.detail;
-    if (!msg) return;
-    var text = msg.text || msg.content || "";
-    if (!text) return;
-
-    // Parse emoji status prefixes
-    if (text.indexOf("🔍") >= 0) {
-      var layerMatch = text.match(/🔍.*?(Macro|Micro|Professional|Personal)/);
-      if (layerMatch) { setStatus("Generating " + layerMatch[1] + " consequence…"); updateLayerState(layerMatch[1], "evaluating", {}); }
-    } else if (text.indexOf("🔎") >= 0) {
-      var layerMatch = text.match(/🔎.*?(Macro|Micro|Professional|Personal)/);
-      if (layerMatch) { setStatus("Auditing " + layerMatch[1] + " claim…"); updateLayerState(layerMatch[1], "auditing", {}); }
-    } else if (text.indexOf("❌") >= 0) {
-      setStatus("Claim rejected — retrying…");
-    } else if (text.indexOf("✅") >= 0) {
-      setStatus("Claim confirmed — moving to next layer…");
-    } else if (text.indexOf("⏭️") >= 0 || text.indexOf("⏭") >= 0) {
-      setStatus("Layer compressed — no causal path found");
-    } else if (text.indexOf("🦋 CASCADE COMPLETE") >= 0) {
-      setStatus("Cascade complete!");
+        await checkProfile();
+      } catch (e) {
+        console.error(e);
+        alert("Initialization failed: " + e.message);
+      }
     }
-  });
 
-  // Listen for final output
-  task.addEventListener("lemma-output", function(e) {
-    var output = e.detail;
-    if (!output) return;
+    function logout() {
+      localStorage.removeItem('active_job_id');
+      if (client && client.auth) client.auth.logout();
+    }
 
-    clearStatus();
-    $("btn-new").classList.add("visible");
+    async function checkProfile() {
+      showScreen('screen-loading');
+      try {
+        var res = await client.records.list('user_profiles', { limit: 1 });
+        var profile = res.items && res.items.length > 0 ? res.items[0] : null;
 
-    // Parse layers from output
-    var layers = output.layers || {};
-    ["Macro","Micro","Professional","Personal"].forEach(function(l) {
-      var ld = layers[l];
-      if (ld) renderLayerFromOutput(l, ld);
-      else updateLayerState(l, "pending", {});
-    });
+        if (profile && profile.profile_status === 'ready') {
+          $("dash-job").textContent = profile.job_target || "N/A";
+          $("dash-stack").textContent = profile.tech_stack || "N/A";
+          $("dash-projects").textContent = profile.current_projects || "N/A";
 
-    // Show complete banner
-    var banner = $("complete-banner");
-    banner.textContent = "🦋 Cascade complete — " + Object.values(layers).filter(function(l){return l && l.status==="confirmed";}).length + " of 4 layers confirmed";
-    banner.classList.add("visible");
+          if (currentJobId) {
+            showScreen('screen-composer');
+            resumePolling(currentJobId);
+          } else {
+            showScreen('screen-dashboard');
+          }
+        } else {
+          showScreen('screen-onboarding');
+          $("btn-onboard").disabled = false;
+          $("btn-onboard").textContent = "Create Profile";
+          if (profile && profile.github_username) {
+            $("ob-github").value = profile.github_username;
+          }
+          if (profile && profile.profile_error) {
+            $("ob-error").textContent = profile.profile_error;
+            $("ob-error").classList.add("visible");
+          }
+        }
+      } catch (err) {
+        console.error("Profile check failed", err);
+        // Fallback to onboarding on error for robustness during dev
+        showScreen('screen-onboarding');
+        $("btn-onboard").disabled = false;
+        $("btn-onboard").textContent = "Create Profile";
+      }
+    }
 
-    $("btn-analyze").disabled = false;
-  });
+    async function submitOnboarding() {
+      var gh = $("ob-github").value.trim();
+      var fileInput = $("ob-resume");
+      if (!gh) { $("ob-error").textContent = "GitHub username is required"; $("ob-error").classList.add("visible"); return; }
+      if (!fileInput.files.length) { $("ob-error").textContent = "Resume upload is required"; $("ob-error").classList.add("visible"); return; }
 
-  task.addEventListener("lemma-error", function(e) {
-    clearStatus();
-    $("err-msg").textContent = "Cascade failed: " + esc((e.detail && e.detail.message) || "unknown error");
-    $("err-msg").classList.add("visible");
-    $("btn-analyze").disabled = false;
-    ["Macro","Micro","Professional","Personal"].forEach(function(l) {
-      updateLayerState(l, "pending", {});
-    });
-  });
+      $("ob-error").classList.remove("visible");
+      $("btn-onboard").disabled = true;
+      $("btn-onboard").textContent = "Uploading resume...";
 
-  container.appendChild(task);
-  // Trigger run
-  task.run();
-}
-</script>
+      try {
+        var file = fileInput.files[0];
+        var uploadRes = await client.files.upload(file);
+        var resumePath = uploadRes.path || uploadRes.file_path || uploadRes.id;
+        if (!resumePath) {
+          throw new Error("Resume upload did not return a file path.");
+        }
+
+        $("btn-onboard").textContent = "Extracting GitHub profile...";
+        var githubProfile = await runLemmaFunction("github_extractor", {
+          github_username: gh
+        });
+
+        $("btn-onboard").textContent = "Parsing resume...";
+        var resumeProfile = await runLemmaFunction("resume_parser", {
+          resume_file_path: resumePath
+        });
+
+        var errors = [];
+        if (githubProfile && githubProfile.error) errors.push(githubProfile.error);
+        if (resumeProfile && resumeProfile.error) errors.push(resumeProfile.error);
+
+        $("btn-onboard").textContent = errors.length ? "Saving failed profile..." : "Saving profile...";
+        await runLemmaFunction("create_or_update_profile", {
+          github_username: gh,
+          resume_file_path: resumePath,
+          tech_stack: githubProfile.tech_stack || "",
+          top_repos: githubProfile.top_repos || "",
+          job_target: resumeProfile.job_target || "",
+          current_projects: resumeProfile.current_projects || "",
+          upcoming_events: resumeProfile.upcoming_events || "",
+          company_context: resumeProfile.company_context || "",
+          profile_status: errors.length ? "failed" : "ready",
+          profile_error: errors.join(" | ")
+        });
+
+        await checkProfile();
+      } catch (err) {
+        $("ob-error").textContent = "Onboarding failed: " + err.message;
+        $("ob-error").classList.add("visible");
+        $("btn-onboard").disabled = false;
+        $("btn-onboard").textContent = "Create Profile";
+      }
+    }
+
+    async function startAnalysis() {
+      var news = $("news-input").value.trim();
+      if (!news) { $("analysis-error").textContent = "Enter a news event"; $("analysis-error").classList.add("visible"); return; }
+
+      $("analysis-error").classList.remove("visible");
+      $("btn-analyze").disabled = true;
+
+      resetCascadeUI();
+      showScreen('screen-composer');
+      $("cascade").style.display = "block";
+      $("analysis-meta").style.display = "grid";
+      $("status-text").textContent = "Starting async job...";
+      setAnalysisMeta("Starting async job...", "Queued", 0);
+
+      try {
+        var output = await runLemmaFunction("start_analysis", { news_event: news });
+
+        if (output.job_id) {
+          currentJobId = output.job_id;
+          localStorage.setItem('active_job_id', currentJobId);
+          resumePolling(currentJobId);
+        } else {
+          throw new Error("No job_id returned");
+        }
+      } catch (err) {
+        $("analysis-error").textContent = "Failed to start analysis: " + err.message;
+        $("analysis-error").classList.add("visible");
+        $("btn-analyze").disabled = false;
+        $("status-text").textContent = "Failed";
+        setAnalysisMeta("Failed to start job", "Error", 0);
+      }
+    }
+
+    function resumePolling(jobId) {
+      showScreen('screen-composer');
+      $("cascade").style.display = "block";
+      $("status-text").textContent = "Polling job state...";
+      $("analysis-meta").style.display = "grid";
+      $("btn-analyze").disabled = true;
+
+      if (pollTimer) clearInterval(pollTimer);
+
+      // Create UI layers first if they don't exist
+      if ($("cascade-layers").innerHTML.trim() === "") {
+        resetCascadeUI();
+      }
+
+      pollTimer = setInterval(() => pollJob(jobId), 3000);
+      pollJob(jobId);
+    }
+
+    async function pollJob(jobId) {
+      try {
+        var output = await runLemmaFunction("get_analysis", { job_id: jobId });
+        updateJobMeta(output);
+        renderCascadeState(output);
+
+        if (output.status === "completed" || output.status === "failed") {
+          clearInterval(pollTimer);
+          localStorage.removeItem('active_job_id');
+          $("btn-analyze").disabled = false;
+          $("status-text").textContent = output.status === "completed" ? "Analysis Complete" : "Analysis Failed";
+
+          if (output.status === "completed") {
+            $("complete-banner").textContent = "🦋 Cascade complete";
+            $("complete-banner").classList.add("visible");
+            $("failed-banner").classList.remove("visible");
+          } else {
+            var failedMsg = output.error_message || "The analysis job failed. Check the job logs or retry.";
+            $("failed-banner").textContent = "⚠ " + failedMsg;
+            $("failed-banner").classList.add("visible");
+            $("complete-banner").classList.remove("visible");
+          }
+        } else {
+          $("btn-analyze").disabled = true;
+        }
+      } catch (err) {
+        console.error("Polling error", err);
+      }
+    }
+
+    function setAnalysisMeta(statusText, layerText, progressPct) {
+      $("analysis-status-text").textContent = statusText;
+      $("analysis-layer-pill").textContent = layerText;
+      $("analysis-progress-fill").style.width = Math.max(0, Math.min(100, progressPct || 0)) + "%";
+    }
+
+    function updateJobMeta(jobOutput) {
+      if (!jobOutput) return;
+      var layer = jobOutput.current_layer || "Waiting";
+      var status = jobOutput.status || "running";
+      var progress = typeof jobOutput.progress_pct === "number" ? jobOutput.progress_pct : 0;
+      var label = status.charAt(0).toUpperCase() + status.slice(1);
+      if (status === "running" && layer && layer !== "Waiting") {
+        label = "Running " + layer;
+      } else if (status === "completed") {
+        label = "Completed";
+      } else if (status === "failed") {
+        label = "Failed";
+      }
+      setAnalysisMeta(label, layer, progress);
+      $("status-text").textContent = layer && layer !== "Waiting" ? (label + " - " + progress + "%") : label;
+    }
+
+    function resetCascadeUI() {
+      var html = "";
+      LAYERS.forEach((l, i) => {
+        if (i > 0) html += `<div class="connector" id="conn-${l.toLowerCase()}"></div>`;
+        html += `
+      <div class="layer" id="layer-${l.toLowerCase()}">
+        <div class="layer-card pending" id="card-${l.toLowerCase()}">
+          <div class="layer-top">
+            <span class="layer-dot pending" id="dot-${l.toLowerCase()}"></span>
+            <span class="layer-name">${l}</span>
+            <span class="layer-status-badge" id="badge-${l.toLowerCase()}">pending</span>
+          </div>
+          <div class="layer-claim pending-text" id="claim-${l.toLowerCase()}">Waiting…</div>
+        </div>
+      </div>
+    `;
+      });
+      $("cascade-layers").innerHTML = html;
+      $("complete-banner").classList.remove("visible");
+      $("failed-banner").classList.remove("visible");
+    }
+
+    function updateLayerUI(layerName, state, data) {
+      var key = layerName.toLowerCase();
+      var card = $("card-" + key);
+      if (!card) return;
+
+      var dot = $("dot-" + key);
+      var badge = $("badge-" + key);
+      var claimEl = $("claim-" + key);
+
+      ["pending", "evaluating", "auditing", "confirmed", "rejected", "compressed"].forEach(s => {
+        card.classList.remove(s); dot.classList.remove(s); badge.classList.remove(s);
+      });
+      card.classList.add(state); dot.classList.add(state); badge.classList.add(state);
+
+      var labels = { pending: "pending", evaluating: "generating…", auditing: "auditing…", confirmed: "confirmed", rejected: "rejected", compressed: "compressed", low_confidence: "low confidence" };
+      badge.textContent = labels[state] || state;
+
+      if (state === "confirmed" || state === "low_confidence") {
+        var score = data.confidence_score || 0;
+        var confColor = { "5": "var(--conf-5)", "4": "var(--conf-4)", "3": "var(--conf-3)", "2": "var(--conf-2)", "1": "var(--conf-1)" }[String(score)] || "var(--muted)";
+        var confWidth = Math.round((score / 5) * 100) + "%";
+
+        var sourcesHtml = (data.verified_sources || []).map(s => {
+          var d = s.url ? (new URL(s.url)).hostname.replace(/^www\./, "") : s.title;
+          return `<a class="source-chip" href="${esc(s.url || '#')}" target="_blank">${esc(d)}</a>`;
+        }).join("");
+
+        card.innerHTML = `
+      <div class="layer-top">
+        <span class="layer-dot ${state === "low_confidence" ? "confirmed" : state}" id="dot-${key}"></span>
+        <span class="layer-name">${esc(layerName)}</span>
+        <span class="layer-status-badge ${state === "low_confidence" ? "confirmed" : state}" id="badge-${key}">${labels[state]}</span>
+      </div>
+      <div class="layer-claim">${esc(data.claim)}</div>
+      <div class="conf-bar-wrap">
+        <span class="conf-label">Confidence</span>
+        <div class="conf-bar"><div class="conf-fill" style="width:${confWidth};background:${confColor}"></div></div>
+        <span class="conf-score">${score}/5</span>
+      </div>
+      ${data.evidence_extracted ? `<div class="evidence">"${esc(data.evidence_extracted)}"</div>` : ''}
+      ${sourcesHtml ? `<div class="sources">${sourcesHtml}</div>` : ''}
+    `;
+
+        var idx = LAYERS.indexOf(layerName);
+        if (idx > 0) {
+          var conn = $("conn-" + LAYERS[idx - 1].toLowerCase());
+          if (conn) conn.className = "connector conf-" + score;
+        }
+      } else if (state === "compressed") {
+        claimEl.innerHTML = '<span class="compressed-label">⏭ No direct causal path — layer compressed</span>';
+      } else if (state === "evaluating") {
+        claimEl.innerHTML = '<span class="pending-text">Generating consequence…</span>';
+      }
+    }
+
+    function renderCascadeState(jobOutput) {
+      if (!jobOutput || !jobOutput.layers) return;
+      var layers = jobOutput.layers || {};
+
+      var currentActiveIdx = -1;
+      LAYERS.forEach((l, i) => {
+        var ld = layers[l];
+        if (ld) {
+          if (ld.status === "confirmed" || ld.status === "low_confidence" || ld.status === "compressed") {
+            updateLayerUI(l, ld.status, ld);
+            currentActiveIdx = i;
+          } else if (ld.status === "evaluating" || ld.status === "auditing") {
+            updateLayerUI(l, ld.status, ld);
+            currentActiveIdx = i;
+          }
+        }
+      });
+
+      if (jobOutput.status === "running") {
+        // If we have no evaluating layers explicitly returned, guess the next one
+        var isCurrentlyEvaluating = false;
+        LAYERS.forEach((l) => { if (layers[l] && (layers[l].status === "evaluating" || layers[l].status === "auditing")) isCurrentlyEvaluating = true; });
+
+        if (!isCurrentlyEvaluating && currentActiveIdx < LAYERS.length - 1) {
+          var nextLayer = LAYERS[currentActiveIdx + 1];
+          updateLayerUI(nextLayer, "evaluating", {});
+          $("status-text").textContent = `Generating ${nextLayer} consequence...`;
+        } else if (isCurrentlyEvaluating) {
+          var nextLayer = LAYERS[currentActiveIdx];
+          $("status-text").textContent = `Generating ${nextLayer} consequence...`;
+        }
+      }
+    }
+
+  </script>
 </body>
+
 </html>

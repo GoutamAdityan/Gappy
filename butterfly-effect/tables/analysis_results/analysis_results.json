@@ -1,0 +1,15 @@
+{
+  "name": "analysis_results",
+  "enable_rls": true,
+  "visibility": "PUBLIC",
+  "columns": [
+    { "name": "owner_id", "type": "TEXT", "required": true, "description": "Lemma User ID" },
+    { "name": "job_id", "type": "TEXT", "required": true, "description": "Foreign key to analysis_jobs" },
+    { "name": "layer_name", "type": "TEXT", "required": true, "description": "Macro, Micro, Professional, or Personal" },
+    { "name": "layer_order", "type": "INTEGER", "required": false, "description": "0-based layer ordering for reconstruction and sorting" },
+    { "name": "attempt_number", "type": "INTEGER", "required": false, "description": "Retry attempt number for this layer" },
+    { "name": "status", "type": "TEXT", "required": true, "description": "pending, evaluating, confirmed, rejected, compressed, or low_confidence" },
+    { "name": "layer_data", "type": "TEXT", "required": false, "description": "JSON string of the consequence data" }
+  ],
+  "config": {}
+}

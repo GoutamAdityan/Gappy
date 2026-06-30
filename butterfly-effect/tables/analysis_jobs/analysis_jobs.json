@@ -1,0 +1,17 @@
+{
+  "name": "analysis_jobs",
+  "enable_rls": true,
+  "visibility": "PUBLIC",
+  "columns": [
+    { "name": "owner_id", "type": "TEXT", "required": true, "description": "Lemma User ID" },
+    { "name": "news_event", "type": "TEXT", "required": true, "description": "The headline being analyzed" },
+    { "name": "status", "type": "TEXT", "required": true, "default_value": "queued", "description": "queued, running, completed, failed, or canceled" },
+    { "name": "current_layer", "type": "TEXT", "required": false, "description": "Current layer being processed: Macro, Micro, Professional, or Personal" },
+    { "name": "progress_pct", "type": "INTEGER", "required": false, "description": "0-100 progress indicator for polling UIs" },
+    { "name": "attempt_count", "type": "INTEGER", "required": false, "description": "Total retry attempts across the job" },
+    { "name": "error_message", "type": "TEXT", "required": false, "description": "Latest failure message, if any" },
+     { "name": "started_at", "type": "DATETIME", "required": false, "description": "Job start timestamp" },
+     { "name": "completed_at", "type": "DATETIME", "required": false, "description": "Job completion timestamp" }
+  ],
+  "config": {}
+}

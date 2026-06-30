@@ -1,0 +1,13 @@
+{
+  "name": "start_analysis",
+  "description": "Async cascade orchestrator. Reads user profile, writes analysis job/result rows, and returns a job id immediately.",
+  "type": "API",
+  "visibility": "POD",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "folder", "resource_name": "/secrets", "permission_ids": ["folder.read"] },
+    { "resource_type": "datastore_table", "resource_name": "user_profiles", "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "analysis_jobs", "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] },
+    { "resource_type": "datastore_table", "resource_name": "analysis_results", "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ] }
+}
