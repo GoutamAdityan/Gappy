@@ -1,0 +1,11 @@
+{
+  "name": "start_onboarding",
+  "description": "Async onboarding: spawns background thread to extract GitHub + parse resume + write user_profiles. Returns immediately.",
+  "type": "API",
+  "visibility": "PUBLIC",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "folder", "resource_name": "/secrets", "permission_ids": ["folder.read"] },
+    { "resource_type": "datastore_table", "resource_name": "user_profiles", "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ] }
+}

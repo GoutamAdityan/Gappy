@@ -269,31 +269,67 @@ async def _generate_claim(
     if not nim_key:
         return fallback
 
-    system_prompt = """Return ONLY valid JSON.
-Generate one downstream consequence node.
-Rules:
-- No markdown.
-- No prose outside JSON.
+    layer_guidance = {
+        "Macro": (
+            "MACRO layer = global economic or market-level consequence. "
+            "Think: capital markets, regulatory signals, investor repricing, sector rotation, geopolitical ripple. "
+            "Do NOT mention the user profile. Be specific about WHO reprice or HOW capital moves. "
+            "search_query should target financial news or market analysis."
+        ),
+        "Micro": (
+            "MICRO layer = industry or ecosystem-level consequence. "
+            "Think: which specific companies, startups, or platforms are directly hurt OR gain from this. "
+            "Name both losers (incumbents disrupted) AND winners (who gains market share or advantage). "
+            "Do NOT mention the user profile. Be specific — name companies, not categories. "
+            "search_query should name the specific companies or market segments involved."
+        ),
+        "Professional": (
+            "PROFESSIONAL layer = career and skills impact for someone with THIS SPECIFIC tech stack and background. "
+            "Think: which skills become more or less valuable, which job categories surge or contract, "
+            "what new technical demands appear for developers/engineers in this stack. "
+            "Be concrete — not 'teams will discuss' but 'Python ML engineers will face pressure to...' or 'demand for X skill rises because...'. "
+            "search_query should target career, hiring, or skills market data related to the event."
+        ),
+        "Personal": (
+            "PERSONAL layer = ONE concrete action or risk for THIS specific person given their projects and context. "
+            "Think: how their current projects become more or less relevant, what they should prepare for, "
+            "what opportunity opens up in the next 30-60 days. "
+            "Reference their actual project names or career stage. Make it actionable, not abstract. "
+            "search_query should target practical guides or opportunities related to the event and their domain."
+        ),
+    }
+
+    system_prompt = f"""Return ONLY valid JSON. No markdown, no prose outside JSON.
+
+You generate ONE downstream consequence node for the {layer} layer of a news cascade.
+
+LAYER DEFINITION:
+{layer_guidance.get(layer, '')}
+
+RULES:
 - If current_layer is Professional or Personal and user_profile is empty, return skip_layer true.
 - If current_layer is not Macro and previous_nodes is empty, return skip_layer true.
-- Never invent user-specific companies, interviews, or projects when user_profile is empty.
-- Avoid claims already listed in rejected_claims.
-- Output either:
-{"layer":"Macro|Micro|Professional|Personal","claim":"...","search_query":"...","reasoning":"..."}
-or
-{"layer":"Macro|Micro|Professional|Personal","claim":"","search_query":"","reasoning":"","skip_layer":true,"skip_reason":"..."}"""
+- Do not repeat or closely paraphrase claims in rejected_claims.
+- claim must be a single declarative sentence, max 25 words.
+- search_query must be 4-8 words, specific enough to find real evidence.
 
+OUTPUT (choose one):
+{{"layer":"{layer}","claim":"...","search_query":"...","reasoning":"..."}}
+or
+{{"layer":"{layer}","claim":"","search_query":"","reasoning":"","skip_layer":true,"skip_reason":"..."}}"""
+
+    profile_str = _structured_profile(user_profile) if user_profile else ""
     user_prompt = json.dumps(
         {
             "news_event": news_event,
             "current_layer": layer,
             "previous_nodes": previous_nodes,
-            "user_profile": user_profile,
+            "user_profile_summary": profile_str,
             "rejected_claims": rejected_claims,
         },
         ensure_ascii=False,
     )
-    result = await _nim_json(nim_key, system_prompt, user_prompt, fallback, temperature=0.15, max_tokens=350)
+    result = await _nim_json(nim_key, system_prompt, user_prompt, fallback, temperature=0.2, max_tokens=400)
     if not isinstance(result, dict) or str(result.get("layer", "")) != layer:
         return fallback
     if not result.get("claim") and not result.get("skip_layer"):
@@ -317,18 +353,36 @@ async def _audit_claim(
     if not nim_key:
         return fallback
 
-    system_prompt = """Return ONLY valid JSON.
-You validate a claim using only provided search snippets.
-Confidence rubric:
-5 exact match
-4 strong support
-3 plausible support
-2 weak/tangential
-1 unsupported/contradicted
-If confidence_score <= 2 -> validated false.
-If confidence_score >= 3 -> validated true.
-Output:
-{"validated":true,"confidence_score":4,"evidence_extracted":"...","verified_source_ids":[0,2]}"""
+    system_prompt = """Return ONLY valid JSON. No markdown, no prose outside JSON.
+
+Validate a claim using ONLY the provided search snippets.
+
+CONFIDENCE RUBRIC:
+5 = snippet directly confirms the claim with specific facts or data
+4 = strong support — clear causal or factual alignment
+3 = plausible support — relevant context but indirect
+2 = weak/tangential — only loosely related
+1 = unsupported or contradicted
+
+DOMAIN QUALITY FILTER (apply before scoring):
+If a snippet is from a domain clearly irrelevant to tech, finance, or industry news — such as:
+dentistry, real estate listings, local restaurants, beauty services, personal blogs, religious organizations —
+assign that snippet confidence 1 regardless of text content. Do NOT cite it as evidence.
+
+SOURCE AUTHORITY FILTER:
+For claims about market movements, investor behavior, company strategy, or technical/engineering topics:
+- Social and UGC platforms (youtube.com, x.com, twitter.com, reddit.com, tiktok.com, instagram.com, facebook.com, pinterest.com, tumblr.com) → cap confidence at 2. Not authoritative for these claims.
+- Prefer: reuters.com, bloomberg.com, techcrunch.com, wsj.com, ft.com, ieee.org, nature.com, arxiv.org, hbr.org, official company blogs, .gov, .edu domains.
+- If ONLY social/UGC sources are available, set confidence_score 2 and validated false.
+
+RULES:
+- Only use snippets actually provided. Do not invent evidence.
+- confidence_score <= 2 → validated: false
+- confidence_score >= 3 → validated: true
+- verified_source_ids must contain only integer indices from the provided snippets
+
+OUTPUT:
+{"validated":true,"confidence_score":4,"evidence_extracted":"one sentence of direct evidence","verified_source_ids":[0,2]}"""
 
     payload = {"claim": claim, "search_snippets": snippets}
     result = await _nim_json(nim_key, system_prompt, json.dumps(payload, ensure_ascii=False), fallback, temperature=0.0, max_tokens=250)
@@ -354,6 +408,38 @@ def _profile_hint(user_profile: Dict[str, Any]) -> str:
     ]
     text = ", ".join([part for part in parts if part]).strip(", ")
     return text[:220]
+
+
+def _structured_profile(user_profile: Dict[str, Any]) -> str:
+    tech = user_profile.get("tech_stack") or ""
+    job = user_profile.get("job_target") or ""
+    projects = user_profile.get("current_projects") or ""
+    events = user_profile.get("upcoming_events") or ""
+    orgs = user_profile.get("company_context") or ""
+    repos = user_profile.get("top_repos") or ""
+
+    lines = []
+    if tech:
+        lines.append(f"Tech stack: {tech}")
+    if job:
+        lines.append(f"Career target: {job}")
+    elif orgs:
+        # Infer career stage from org context
+        lines.append(f"Context: {orgs[:200]}")
+    if projects:
+        lines.append(f"Active projects: {projects}")
+    if events:
+        lines.append(f"Upcoming events: {events}")
+    if repos and repos != "[]":
+        try:
+            import json as _json
+            repo_list = _json.loads(repos) if isinstance(repos, str) else repos
+            descs = [f"{r['name']}: {r['description']}" for r in repo_list[:3] if r.get("description")]
+            if descs:
+                lines.append(f"Key repos: {'; '.join(descs)}")
+        except Exception:
+            pass
+    return "\n".join(lines)[:600]
 
 
 def _map_sources(search_results: List[Dict[str, Any]], source_ids: List[int]) -> List[VerifiedSource]:

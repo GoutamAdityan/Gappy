@@ -1,0 +1,17 @@
+{
+  "name": "upload_resume",
+  "description": "Accepts a base64-encoded PDF and writes it to /resumes/<filename>. Returns the pod file path.",
+  "type": "API",
+  "visibility": "PUBLIC",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    {
+      "resource_type": "folder",
+      "resource_name": "/resumes",
+      "permission_ids": [
+        "folder.read",
+        "folder.write"
+      ]
+    }
+  ] }
+}

@@ -12,6 +12,7 @@
     { "name": "upcoming_events", "type": "TEXT", "required": false, "description": "Time-sensitive events from resume, e.g. interviews, deadlines" },
     { "name": "company_context", "type": "TEXT", "required": false, "description": "Current employer or target companies mentioned in resume" },
     { "name": "resume_file_path", "type": "TEXT", "required": false, "description": "Lemma Files path for the uploaded PDF resume" },
+    { "name": "profile_error", "type": "TEXT", "required": false, "description": "Last onboarding error message, if any" },
      { "name": "last_synced_at", "type": "DATETIME", "required": false, "description": "Last successful onboarding sync timestamp" }
   ],
   "config": {}

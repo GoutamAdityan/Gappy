@@ -624,21 +624,159 @@
     }
 
     /* SIGN-IN */
-    .centered-box {
-      display: grid;
-      place-items: center;
-      min-height: 70dvh;
-      text-align: center;
+    .centered-box { display: grid; place-items: center; min-height: 70dvh; text-align: center; }
+    .centered-box h1 { font-size: 2rem; margin: .5rem 0; }
+    .centered-box p { color: var(--muted); margin: .5rem 0 1.5rem; }
+
+    /* DASHBOARD */
+    .profile-hero {
+      display: flex; align-items: flex-start; gap: 1.25rem;
+      margin-bottom: 1.25rem; padding: 1.4rem 1.5rem;
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    }
+    .avatar {
+      width: 62px; height: 62px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--border); flex: none; background: var(--surface);
+    }
+    .profile-hero-info { flex: 1; min-width: 0; }
+    .profile-hero-name {
+      display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; margin-bottom: .25rem;
+    }
+    .profile-hero-name-text { font-size: 1.05rem; font-weight: 700; }
+    .github-pill {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: .7rem; color: var(--muted); background: var(--surface);
+      border: 1px solid var(--border); border-radius: 999px; padding: .15rem .5rem;
+      text-decoration: none; transition: border-color .15s, color .15s;
+    }
+    .github-pill:hover { border-color: var(--muted); color: var(--text); }
+    .profile-hero-role { font-size: .82rem; color: var(--muted); margin-bottom: .65rem; }
+    .tech-badges { display: flex; flex-wrap: wrap; gap: .3rem; margin-bottom: .6rem; }
+    .tech-badge {
+      font-size: .68rem; font-weight: 600; padding: .15rem .5rem;
+      border-radius: 6px; border: 1px solid; letter-spacing: .02em;
+    }
+    .project-chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .project-chip {
+      font-size: .72rem; padding: .2rem .55rem; border-radius: 7px;
+      background: rgba(124,106,255,.08); border: 1px solid rgba(124,106,255,.2); color: var(--accent);
+    }
+    .dash-section {
+      font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); margin: 1.25rem 0 .65rem;
+    }
+    .cascade-row {
+      display: flex; align-items: center; gap: .75rem; padding: .8rem 1rem;
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      margin-bottom: .45rem; cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .cascade-row:hover { border-color: var(--accent); background: rgba(124,106,255,.04); }
+    .cascade-row-text {
+      flex: 1; font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .cascade-row-meta { display: flex; align-items: center; gap: .55rem; flex: none; }
+    .cascade-row-status { font-size: .68rem; padding: .12rem .42rem; border-radius: 5px; }
+    .cascade-row.done .cascade-row-status { background: rgba(74,222,128,.1); color: var(--green); }
+    .cascade-row.fail .cascade-row-status { background: rgba(248,113,113,.1); color: var(--red); }
+    .cascade-row.running .cascade-row-status { background: rgba(124,106,255,.1); color: var(--accent); }
+    .cascade-row-time { font-size: .7rem; color: var(--muted); }
+    .cascade-row-arrow { font-size: .8rem; color: var(--muted); }
+    .empty-cascades {
+      font-size: .83rem; color: var(--muted); text-align: center; padding: 1.4rem;
+      background: var(--card); border: 1px dashed var(--border); border-radius: 12px; margin-bottom: .5rem;
+    }
+    .launch-panel {
+      background: linear-gradient(135deg, rgba(124,106,255,.07) 0%, rgba(34,211,238,.04) 100%);
+      border: 1px solid rgba(124,106,255,.22); border-radius: 16px; padding: 1.4rem 1.5rem;
+      margin-top: 1.25rem;
+    }
+    .launch-headline {
+      font-size: .95rem; font-weight: 700; margin-bottom: .8rem;
+      background: linear-gradient(90deg, var(--text) 55%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .launch-row { display: flex; gap: .7rem; align-items: center; }
+    .launch-row input {
+      flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font: inherit; font-size: .88rem; padding: .6rem .85rem;
+      outline: none; transition: border-color .15s;
+    }
+    .launch-row input:focus { border-color: var(--accent); }
+    .dash-update-btn {
+      margin-left: auto; background: none; border: none; color: var(--muted);
+      font-size: .72rem; cursor: pointer; text-decoration: underline;
+    }
+    .dash-update-btn:hover { color: var(--text); }
+
+    /* SIGNIN REDESIGN */
+    #screen-signin { position: relative; overflow: hidden; height: 100dvh; display: none; }
+    #screen-signin.active { display: flex; align-items: center; justify-content: center; }
+
+    .signin-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .signin-glow {
+      position: absolute; border-radius: 50%; filter: blur(120px); opacity: .18;
+    }
+    .signin-glow-1 {
+      width: 600px; height: 600px; background: radial-gradient(circle, #7c6aff 0%, transparent 70%);
+      top: -200px; left: -100px;
+    }
+    .signin-glow-2 {
+      width: 500px; height: 500px; background: radial-gradient(circle, #22d3ee 0%, transparent 70%);
+      bottom: -150px; right: -80px;
     }
 
-    .centered-box h1 {
-      font-size: 2rem;
-      margin: .5rem 0;
+    .signin-layout {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+      max-width: 960px; width: 100%; padding: 2rem 2rem;
+    }
+    @media (max-width: 700px) {
+      .signin-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .signin-preview { display: none; }
     }
 
-    .centered-box p {
-      color: var(--muted);
-      margin: .5rem 0 1.5rem;
+    .signin-hero { display: flex; flex-direction: column; gap: 0; }
+    .signin-logo-mark { font-size: 2.8rem; margin-bottom: .35rem; line-height: 1; }
+    .signin-title {
+      font-size: 2.4rem; font-weight: 800; letter-spacing: -.03em;
+      background: linear-gradient(135deg, #e8e6f0 30%, #7c6aff 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin: 0 0 .75rem;
+    }
+    .signin-tagline {
+      font-size: 1rem; color: var(--muted); line-height: 1.6; margin: 0 0 1.5rem;
+    }
+    .signin-btn {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: #fff; color: #0d0d0f; border: none; border-radius: 12px;
+      font: inherit; font-size: 1rem; font-weight: 700; padding: .85rem 1.8rem;
+      cursor: pointer; width: fit-content;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 8px 24px rgba(0,0,0,.4);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .signin-btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(255,255,255,.15), 0 12px 32px rgba(0,0,0,.5); }
+    .signin-note { font-size: .75rem; color: var(--muted); margin-top: .85rem; }
+
+    /* Preview cascade */
+    .signin-preview { display: flex; flex-direction: column; }
+    .preview-label { font-size: .68rem; font-weight: 700; letter-spacing: .1em; color: var(--muted); margin-bottom: .85rem; }
+    .preview-node {
+      background: rgba(26,26,34,.7); backdrop-filter: blur(8px);
+      border: 1px solid var(--border); border-radius: 12px; padding: .65rem .9rem;
+    }
+    .preview-node-macro { border-color: rgba(74,222,128,.3); }
+    .preview-node-micro { border-color: rgba(74,222,128,.2); }
+    .preview-node-pro  { border-color: rgba(74,222,128,.15); }
+    .preview-node-personal { border-color: rgba(74,222,128,.1); }
+    .preview-node-top { display: flex; align-items: center; gap: .5rem; margin-bottom: .4rem; }
+    .preview-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+    .preview-dot.confirmed { background: var(--green); }
+    .preview-layer { font-size: .65rem; font-weight: 700; letter-spacing: .1em; color: var(--muted); }
+    .preview-badge { margin-left: auto; font-size: .65rem; color: var(--green); }
+    .preview-claim { font-size: .8rem; line-height: 1.45; color: var(--text); }
+    .preview-connector {
+      width: 1px; height: 12px; margin-left: 14px;
+      background: linear-gradient(to bottom, rgba(74,222,128,.3), rgba(74,222,128,.1));
     }
   </style>
 </head>
@@ -670,11 +808,43 @@
 
     <!-- SIGN IN -->
     <div id="screen-signin" class="screen">
-      <div class="centered-box">
-        <p style="font-size:2.5rem">🦋</p>
-        <h1>Butterfly Effect</h1>
-        <p>One piece of news. Every subsequent consequence.</p>
-        <button class="btn-primary" onclick="client.auth.redirectToAuth()">Sign in with GitHub</button>
+      <div class="signin-bg">
+        <div class="signin-glow signin-glow-1"></div>
+        <div class="signin-glow signin-glow-2"></div>
+      </div>
+      <div class="signin-layout">
+        <div class="signin-hero">
+          <div class="signin-logo-mark">🦋</div>
+          <h1 class="signin-title">Butterfly Effect</h1>
+          <p class="signin-tagline">One piece of news.<br>Every subsequent consequence.</p>
+          <button class="signin-btn" onclick="client.auth.redirectToAuth()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Get Started — It's Free
+          </button>
+          <p class="signin-note">No credit card · Powered by Lemma</p>
+        </div>
+        <div class="signin-preview">
+          <div class="preview-label">CONSEQUENCE CASCADE</div>
+          <div class="preview-node preview-node-macro">
+            <div class="preview-node-top"><span class="preview-dot confirmed"></span><span class="preview-layer">MACRO</span><span class="preview-badge">confirmed · 5/5</span></div>
+            <div class="preview-claim">Investors reprice AI developer tool competitors after $3B acquisition signal.</div>
+          </div>
+          <div class="preview-connector"></div>
+          <div class="preview-node preview-node-micro">
+            <div class="preview-node-top"><span class="preview-dot confirmed"></span><span class="preview-layer">MICRO</span><span class="preview-badge">confirmed · 4/5</span></div>
+            <div class="preview-claim">Cloud IDE vendors accelerate roadmap to compete with integrated OpenAI tooling.</div>
+          </div>
+          <div class="preview-connector"></div>
+          <div class="preview-node preview-node-pro">
+            <div class="preview-node-top"><span class="preview-dot confirmed"></span><span class="preview-layer">PROFESSIONAL</span><span class="preview-badge">confirmed · 4/5</span></div>
+            <div class="preview-claim">Teams on React + TypeScript stacks face imminent Copilot migration pressure from leadership.</div>
+          </div>
+          <div class="preview-connector"></div>
+          <div class="preview-node preview-node-personal">
+            <div class="preview-node-top"><span class="preview-dot confirmed"></span><span class="preview-layer">PERSONAL</span><span class="preview-badge">confirmed · 4/5</span></div>
+            <div class="preview-claim">Upcoming interviews will likely include questions on AI-assisted coding workflows and model strategy.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -700,34 +870,34 @@
 
     <!-- DASHBOARD -->
     <div id="screen-dashboard" class="screen">
-      <div class="panel">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-          <h2 class="panel-title" style="margin:0;">Your Profile</h2>
-          <button class="btn-secondary" onclick="showScreen('screen-onboarding')">Update</button>
-        </div>
-        <div class="profile-grid">
-          <div class="profile-item">
-            <div class="profile-item-label">Job Target</div>
-            <div class="profile-item-value" id="dash-job">Loading...</div>
+      <!-- Profile hero -->
+      <div class="profile-hero">
+        <img id="dash-avatar" class="avatar" src="" alt="" onerror="this.style.display='none'" style="display:none" />
+        <div class="profile-hero-info">
+          <div class="profile-hero-name">
+            <span class="profile-hero-name-text" id="dash-name">—</span>
+            <a id="dash-github-link" class="github-pill" href="#" target="_blank">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+              <span id="dash-github-username"></span>
+            </a>
+            <button class="dash-update-btn" onclick="showScreen('screen-onboarding')">Update profile</button>
           </div>
-          <div class="profile-item">
-            <div class="profile-item-label">Tech Stack</div>
-            <div class="profile-item-value" id="dash-stack">Loading...</div>
-          </div>
-          <div class="profile-item">
-            <div class="profile-item-label">Active Projects</div>
-            <div class="profile-item-value" id="dash-projects">Loading...</div>
-          </div>
+          <div class="profile-hero-role" id="dash-role"></div>
+          <div class="tech-badges" id="dash-tech-badges"></div>
+          <div class="project-chips" id="dash-project-chips"></div>
         </div>
       </div>
-      <div class="panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
-          <div>
-            <h2 class="panel-title" style="margin:0;">Composer</h2>
-            <p style="color:var(--muted); font-size:.85rem; margin-top:.25rem;">Open the analysis composer to run or
-              resume a cascade.</p>
-          </div>
-          <button class="btn-primary" onclick="showScreen('screen-composer')">Open Composer →</button>
+
+      <!-- Recent cascades -->
+      <div class="dash-section">Recent Cascades</div>
+      <div id="recent-cascades-list"><div class="empty-cascades">No cascades yet — run your first analysis below.</div></div>
+
+      <!-- Launch panel -->
+      <div class="launch-panel">
+        <div class="launch-headline">What's breaking?</div>
+        <div class="launch-row">
+          <input type="text" id="dash-news-input" placeholder="Paste a news headline to analyze its cascade…" />
+          <button class="btn-primary" onclick="launchFromDashboard()">Analyze →</button>
         </div>
       </div>
     </div>
@@ -742,7 +912,7 @@
             <p style="color:var(--muted); font-size:.85rem; margin-top:.25rem;">Enter a news headline and watch the
               async job progress layer by layer.</p>
           </div>
-          <button class="btn-secondary" onclick="showScreen('screen-dashboard')">Back to Dashboard</button>
+          <button class="btn-secondary" onclick="goToDashboard()">Back to Dashboard</button>
         </div>
         <div style="display:flex; gap:1rem; align-items:flex-end;">
           <div class="field" style="flex:1; margin:0;">
@@ -827,8 +997,10 @@
       return currentUser.id || currentUser.user_id || currentUser.userId || currentUser.uid || currentUser.email || "";
     }
 
-    async function runLemmaFunction(functionName, payload) {
-      var res = await client.functions.run(functionName, { input: payload });
+    async function runLemmaFunction(functionName, payload, timeoutMs) {
+      var opts = { input: payload };
+      if (timeoutMs) opts.timeoutMs = timeoutMs;
+      var res = await client.functions.run(functionName, opts);
       var output = res.output || res.output_data || res;
       if (output && output.error) {
         throw new Error(output.error);
@@ -865,7 +1037,16 @@
 
     function logout() {
       localStorage.removeItem('active_job_id');
-      if (client && client.auth) client.auth.logout();
+      localStorage.removeItem('lemma_token');
+      sessionStorage.clear();
+      try {
+        if (client && client.auth && typeof client.auth.signOut === 'function') { client.auth.signOut(); }
+        else if (client && client.auth && typeof client.auth.logout === 'function') { client.auth.logout(); }
+        else if (client && typeof client.logout === 'function') { client.logout(); }
+        else if (client && typeof client.signOut === 'function') { client.signOut(); }
+      } catch(_) {}
+      // Always show sign-in screen immediately without reload
+      showScreen('screen-signin');
     }
 
     async function checkProfile() {
@@ -875,15 +1056,11 @@
         var profile = res.items && res.items.length > 0 ? res.items[0] : null;
 
         if (profile && profile.profile_status === 'ready') {
-          $("dash-job").textContent = profile.job_target || "N/A";
-          $("dash-stack").textContent = profile.tech_stack || "N/A";
-          $("dash-projects").textContent = profile.current_projects || "N/A";
-
           if (currentJobId) {
             showScreen('screen-composer');
             resumePolling(currentJobId);
           } else {
-            showScreen('screen-dashboard');
+            await loadDashboard(profile);
           }
         } else {
           showScreen('screen-onboarding');
@@ -899,11 +1076,120 @@
         }
       } catch (err) {
         console.error("Profile check failed", err);
-        // Fallback to onboarding on error for robustness during dev
         showScreen('screen-onboarding');
         $("btn-onboard").disabled = false;
         $("btn-onboard").textContent = "Create Profile";
       }
+    }
+
+    async function loadDashboard(profile) {
+      showScreen('screen-dashboard');
+      try {
+        if (!profile) {
+          var res = await client.records.list('user_profiles', { limit: 1 });
+          profile = res.items && res.items.length > 0 ? res.items[0] : null;
+        }
+        if (profile) renderProfileHero(profile);
+        await loadRecentCascades();
+      } catch(e) {
+        console.error('Dashboard load error', e);
+      }
+    }
+
+    function renderProfileHero(profile) {
+      var gh = profile.github_username || '';
+      if (gh) {
+        var av = $('dash-avatar');
+        av.src = 'https://github.com/' + gh + '.png?size=80';
+        av.style.display = '';
+        $('dash-github-username').textContent = gh;
+        $('dash-github-link').href = 'https://github.com/' + gh;
+        $('dash-name').textContent = gh;
+      }
+      $('dash-role').textContent = profile.job_target || '';
+
+      var badgeColors = ['#7c6aff','#22d3ee','#f0c040','#4ade80','#fb923c','#f472b6','#a78bfa','#34d399'];
+      var tech = (profile.tech_stack || '').split(',').map(function(t){return t.trim();}).filter(Boolean);
+      $('dash-tech-badges').innerHTML = tech.slice(0,8).map(function(t,i){
+        var c = badgeColors[i % badgeColors.length];
+        return '<span class="tech-badge" style="background:' + c + '18;color:' + c + ';border-color:' + c + '44">' + esc(t) + '</span>';
+      }).join('');
+
+      var projects = (profile.current_projects || '').split(',').map(function(p){return p.trim();}).filter(Boolean);
+      $('dash-project-chips').innerHTML = projects.slice(0,6).map(function(p){
+        return '<span class="project-chip">' + esc(p) + '</span>';
+      }).join('');
+    }
+
+    async function loadRecentCascades() {
+      var el = $('recent-cascades-list');
+      try {
+        var res = await client.records.list('analysis_jobs', { limit: 6 });
+        var jobs = (res.items || []).sort(function(a,b){ return new Date(b.created_at||0) - new Date(a.created_at||0); });
+        if (!jobs.length) {
+          el.innerHTML = '<div class="empty-cascades">No cascades yet — run your first analysis below.</div>';
+          return;
+        }
+        el.innerHTML = jobs.map(function(j) {
+          var cls = j.status === 'completed' ? 'done' : j.status === 'failed' ? 'fail' : 'running';
+          var t = j.completed_at || j.updated_at || '';
+          var timeStr = t ? relativeTime(t) : '—';
+          var headline = (j.news_event || '').slice(0, 90) + ((j.news_event || '').length > 90 ? '…' : '');
+          return '<div class="cascade-row ' + cls + '" onclick="openCascade(\'' + esc(j.id) + '\',\'' + esc(j.news_event||'').replace(/'/g,"\\'") + '\')">'
+            + '<div class="cascade-row-text">' + esc(headline) + '</div>'
+            + '<div class="cascade-row-meta">'
+            + '<span class="cascade-row-status">' + esc(j.status) + '</span>'
+            + '<span class="cascade-row-time">' + esc(timeStr) + '</span>'
+            + '<span class="cascade-row-arrow">→</span>'
+            + '</div></div>';
+        }).join('');
+      } catch(e) {
+        el.innerHTML = '<div class="empty-cascades">Could not load recent cascades.</div>';
+      }
+    }
+
+    function relativeTime(isoStr) {
+      var diff = Date.now() - new Date(isoStr).getTime();
+      var s = Math.floor(diff / 1000);
+      if (s < 60) return s + 's ago';
+      if (s < 3600) return Math.floor(s/60) + 'm ago';
+      if (s < 86400) return Math.floor(s/3600) + 'h ago';
+      return Math.floor(s/86400) + 'd ago';
+    }
+
+    function openCascade(jobId, newsEvent) {
+      $('news-input').value = newsEvent;
+      resetCascadeUI();
+      $('cascade').style.display = 'block';
+      $('analysis-meta').style.display = 'grid';
+      showScreen('screen-composer');
+      currentJobId = jobId;
+      localStorage.setItem('active_job_id', jobId);
+      resumePolling(jobId);
+    }
+
+    function goToDashboard() {
+      if (pollTimer) clearInterval(pollTimer);
+      currentJobId = null;
+      localStorage.removeItem('active_job_id');
+      $('cascade').style.display = 'none';
+      $('analysis-meta').style.display = 'none';
+      $('news-input').value = '';
+      $('cascade-layers').innerHTML = '';
+      $('complete-banner').classList.remove('visible');
+      $('failed-banner').classList.remove('visible');
+      $('btn-analyze').disabled = false;
+      $('analysis-error').classList.remove('visible');
+      loadDashboard(null);
+    }
+
+    function launchFromDashboard() {
+      var news = $('dash-news-input').value.trim();
+      if (!news) return;
+      $('news-input').value = news;
+      $('dash-news-input').value = '';
+      showScreen('screen-composer');
+      startAnalysis();
     }
 
     async function submitOnboarding() {
@@ -914,45 +1200,53 @@
 
       $("ob-error").classList.remove("visible");
       $("btn-onboard").disabled = true;
-      $("btn-onboard").textContent = "Uploading resume...";
+      $("btn-onboard").textContent = "Reading file…";
 
       try {
         var file = fileInput.files[0];
-        var uploadRes = await client.files.upload(file);
-        var resumePath = uploadRes.path || uploadRes.file_path || uploadRes.id;
-        if (!resumePath) {
-          throw new Error("Resume upload did not return a file path.");
-        }
-
-        $("btn-onboard").textContent = "Extracting GitHub profile...";
-        var githubProfile = await runLemmaFunction("github_extractor", {
-          github_username: gh
+        var fileBase64 = await new Promise(function(resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function(e) { resolve(e.target.result.split(',')[1]); };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
         });
 
-        $("btn-onboard").textContent = "Parsing resume...";
-        var resumeProfile = await runLemmaFunction("resume_parser", {
-          resume_file_path: resumePath
-        });
-
-        var errors = [];
-        if (githubProfile && githubProfile.error) errors.push(githubProfile.error);
-        if (resumeProfile && resumeProfile.error) errors.push(resumeProfile.error);
-
-        $("btn-onboard").textContent = errors.length ? "Saving failed profile..." : "Saving profile...";
-        await runLemmaFunction("create_or_update_profile", {
+        $("btn-onboard").textContent = "Starting profile extraction…";
+        await runLemmaFunction("start_onboarding", {
           github_username: gh,
-          resume_file_path: resumePath,
-          tech_stack: githubProfile.tech_stack || "",
-          top_repos: githubProfile.top_repos || "",
-          job_target: resumeProfile.job_target || "",
-          current_projects: resumeProfile.current_projects || "",
-          upcoming_events: resumeProfile.upcoming_events || "",
-          company_context: resumeProfile.company_context || "",
-          profile_status: errors.length ? "failed" : "ready",
-          profile_error: errors.join(" | ")
-        });
+          file_content_base64: fileBase64,
+          filename: file.name
+        }, 15000);
 
-        await checkProfile();
+        // Poll user_profiles until profile_status !== "processing"
+        $("btn-onboard").textContent = "Extracting GitHub + parsing resume…";
+        var elapsed = 0;
+        var maxWait = 120000;
+        var interval = 4000;
+        while (elapsed < maxWait) {
+          await new Promise(function(r) { setTimeout(r, interval); });
+          elapsed += interval;
+          try {
+            var res = await client.records.list('user_profiles', { limit: 1 });
+            var profile = res.items && res.items.length > 0 ? res.items[0] : null;
+            if (profile && profile.profile_status === 'ready') {
+              await checkProfile();
+              return;
+            }
+            if (profile && profile.profile_status === 'failed') {
+              throw new Error(profile.profile_error || "Onboarding failed");
+            }
+            var secs = Math.round(elapsed / 1000);
+            $("btn-onboard").textContent = "Processing… (" + secs + "s)";
+          } catch (pollErr) {
+            if (pollErr.message && pollErr.message !== "Onboarding failed" && !pollErr.message.includes("profile")) {
+              // transient network error — keep polling
+              continue;
+            }
+            throw pollErr;
+          }
+        }
+        throw new Error("Profile creation timed out — try again");
       } catch (err) {
         $("ob-error").textContent = "Onboarding failed: " + err.message;
         $("ob-error").classList.add("visible");
